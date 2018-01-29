@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BF001EB5201AA3CE00E1BE91 /* Harmony_Drive.h in Headers */ = {isa = PBXBuildFile; fileRef = BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF001F0F201AAFCD00E1BE91 /* libGoogleDrive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECFAD420169EA20012B9FC /* libGoogleDrive.a */; };
+		BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF14BC90201EECA1007D5292 /* DriveService.swift */; };
 		BF4D498B201EDF1800C91218 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */; };
 		BF4D498C201EDF1800C91218 /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */; };
 		BF4D498D201EDF1800C91218 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BF4D498A201EDF1800C91218 /* GoogleSignIn.bundle */; };
@@ -17,6 +18,7 @@
 		BF4D49B3201EE49800C91218 /* GTMMIMEDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4D49AD201EE49800C91218 /* GTMMIMEDocument.m */; };
 		BF4D49B4201EE49800C91218 /* GTMReadMonitorInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4D49B0201EE49800C91218 /* GTMReadMonitorInputStream.m */; };
 		BF4D49B5201EE49800C91218 /* GTMGatherInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4D49B2201EE49800C91218 /* GTMGatherInputStream.m */; };
+		BF6C058C201FBEDA00271895 /* Harmony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF6C058D201FBEDA00271895 /* Harmony.framework */; };
 		BFECFA032016982E0012B9FC /* Harmony_Drive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */; };
 		BFECFA082016982E0012B9FC /* Harmony_DriveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFECFA072016982E0012B9FC /* Harmony_DriveTests.swift */; };
 		BFECFADE20169EDC0012B9FC /* GTLRCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = BFECFADD20169EDC0012B9FC /* GTLRCommon_Sources.m */; };
@@ -66,6 +68,7 @@
 		BF001E9B201A9FAB00E1BE91 /* GTLRRuntimeCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRRuntimeCommon.h; path = Google/GoogleAPI/Source/Objects/GTLRRuntimeCommon.h; sourceTree = "<group>"; };
 		BF001E9C201A9FAB00E1BE91 /* GTLRQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRQuery.h; path = Google/GoogleAPI/Source/Objects/GTLRQuery.h; sourceTree = "<group>"; };
 		BF001EAB201A9FD200E1BE91 /* GTLRDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRDefines.h; path = Google/GoogleAPI/Source/GTLRDefines.h; sourceTree = "<group>"; };
+		BF14BC90201EECA1007D5292 /* DriveService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveService.swift; sourceTree = "<group>"; };
 		BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = Google/GoogleSignIn.framework; sourceTree = "<group>"; };
 		BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignInDependencies.framework; path = Google/GoogleSignInDependencies.framework; sourceTree = "<group>"; };
 		BF4D498A201EDF1800C91218 /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleSignIn.bundle; path = Google/GoogleSignIn.bundle; sourceTree = "<group>"; };
@@ -77,6 +80,7 @@
 		BF4D49B0201EE49800C91218 /* GTMReadMonitorInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMReadMonitorInputStream.m; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMReadMonitorInputStream.m"; sourceTree = "<group>"; };
 		BF4D49B1201EE49800C91218 /* GTMGatherInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMGatherInputStream.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMGatherInputStream.h"; sourceTree = "<group>"; };
 		BF4D49B2201EE49800C91218 /* GTMGatherInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMGatherInputStream.m; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMGatherInputStream.m"; sourceTree = "<group>"; };
+		BF6C058D201FBEDA00271895 /* Harmony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Harmony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Harmony_Drive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Harmony_Drive.h; sourceTree = "<group>"; };
 		BFECF9FD2016982D0012B9FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF6C058C201FBEDA00271895 /* Harmony.framework in Frameworks */,
 				BF4D4999201EE3AE00C91218 /* SafariServices.framework in Frameworks */,
 				BF4D4997201EE33000C91218 /* SystemConfiguration.framework in Frameworks */,
 				BF4D498C201EDF1800C91218 /* GoogleSignInDependencies.framework in Frameworks */,
@@ -180,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */,
+				BF14BC90201EECA1007D5292 /* DriveService.swift */,
 				BFECF9FD2016982D0012B9FC /* Info.plist */,
 			);
 			path = "Harmony-Drive";
@@ -231,6 +237,7 @@
 		BFECFB5A2016A0CE0012B9FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BF6C058D201FBEDA00271895 /* Harmony.framework */,
 				BF4D4998201EE3AE00C91218 /* SafariServices.framework */,
 				BF4D4996201EE32F00C91218 /* SystemConfiguration.framework */,
 				BF4D498A201EDF1800C91218 /* GoogleSignIn.bundle */,
@@ -375,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -619,6 +627,7 @@
 		BFECFA112016982E0012B9FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6XVY5G3U44;
 				INFOPLIST_FILE = "Harmony-DriveTests/Info.plist";
@@ -633,6 +642,7 @@
 		BFECFA122016982E0012B9FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6XVY5G3U44;
 				INFOPLIST_FILE = "Harmony-DriveTests/Info.plist";
