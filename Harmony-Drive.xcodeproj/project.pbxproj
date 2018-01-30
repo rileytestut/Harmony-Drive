@@ -9,6 +9,24 @@
 /* Begin PBXBuildFile section */
 		BF001EB5201AA3CE00E1BE91 /* Harmony_Drive.h in Headers */ = {isa = PBXBuildFile; fileRef = BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF001F0F201AAFCD00E1BE91 /* libGoogleDrive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECFAD420169EA20012B9FC /* libGoogleDrive.a */; };
+		BF0B5BAD2021286B0074CFB9 /* GTLRDefines.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001EAB201A9FD200E1BE91 /* GTLRDefines.h */; };
+		BF0B5BAE2021286B0074CFB9 /* GTLRBatchQuery.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E95201A9FAA00E1BE91 /* GTLRBatchQuery.h */; };
+		BF0B5BAF2021286B0074CFB9 /* GTLRBatchResult.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E96201A9FAA00E1BE91 /* GTLRBatchResult.h */; };
+		BF0B5BB02021286B0074CFB9 /* GTLRDateTime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E98201A9FAA00E1BE91 /* GTLRDateTime.h */; };
+		BF0B5BB12021286B0074CFB9 /* GTLRDuration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E99201A9FAA00E1BE91 /* GTLRDuration.h */; };
+		BF0B5BB22021286B0074CFB9 /* GTLRErrorObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E9A201A9FAB00E1BE91 /* GTLRErrorObject.h */; };
+		BF0B5BB32021286B0074CFB9 /* GTLRObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E94201A9FAA00E1BE91 /* GTLRObject.h */; };
+		BF0B5BB42021286B0074CFB9 /* GTLRQuery.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E9C201A9FAB00E1BE91 /* GTLRQuery.h */; };
+		BF0B5BB52021286B0074CFB9 /* GTLRRuntimeCommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E9B201A9FAB00E1BE91 /* GTLRRuntimeCommon.h */; };
+		BF0B5BB62021286B0074CFB9 /* GTLRService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E93201A9FAA00E1BE91 /* GTLRService.h */; };
+		BF0B5BB72021286B0074CFB9 /* GTLRUploadParameters.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF001E97201A9FAA00E1BE91 /* GTLRUploadParameters.h */; };
+		BF0B5BB82021286B0074CFB9 /* GTLRDrive.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFECFB4F20169F520012B9FC /* GTLRDrive.h */; };
+		BF0B5BB9202128BB0074CFB9 /* GTLRDriveObjects.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFECFB5120169F520012B9FC /* GTLRDriveObjects.h */; };
+		BF0B5BBA202128BB0074CFB9 /* GTLRDriveQuery.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFECFB5420169F520012B9FC /* GTLRDriveQuery.h */; };
+		BF0B5BBB202128BB0074CFB9 /* GTLRDriveService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFECFB5320169F520012B9FC /* GTLRDriveService.h */; };
+		BF0B5BC42021295D0074CFB9 /* GTMSessionFetcher.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC2202129540074CFB9 /* GTMSessionFetcher.h */; };
+		BF0B5BC52021295D0074CFB9 /* GTMSessionFetcherService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC3202129540074CFB9 /* GTMSessionFetcherService.h */; };
+		BF0B5BC72021297F0074CFB9 /* module.modulemap in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC6202129790074CFB9 /* module.modulemap */; };
 		BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF14BC90201EECA1007D5292 /* DriveService.swift */; };
 		BF4D498B201EDF1800C91218 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */; };
 		BF4D498C201EDF1800C91218 /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */; };
@@ -51,6 +69,24 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				BF0B5BC72021297F0074CFB9 /* module.modulemap in CopyFiles */,
+				BF0B5BC42021295D0074CFB9 /* GTMSessionFetcher.h in CopyFiles */,
+				BF0B5BC52021295D0074CFB9 /* GTMSessionFetcherService.h in CopyFiles */,
+				BF0B5BB9202128BB0074CFB9 /* GTLRDriveObjects.h in CopyFiles */,
+				BF0B5BBA202128BB0074CFB9 /* GTLRDriveQuery.h in CopyFiles */,
+				BF0B5BBB202128BB0074CFB9 /* GTLRDriveService.h in CopyFiles */,
+				BF0B5BAD2021286B0074CFB9 /* GTLRDefines.h in CopyFiles */,
+				BF0B5BAE2021286B0074CFB9 /* GTLRBatchQuery.h in CopyFiles */,
+				BF0B5BAF2021286B0074CFB9 /* GTLRBatchResult.h in CopyFiles */,
+				BF0B5BB02021286B0074CFB9 /* GTLRDateTime.h in CopyFiles */,
+				BF0B5BB12021286B0074CFB9 /* GTLRDuration.h in CopyFiles */,
+				BF0B5BB22021286B0074CFB9 /* GTLRErrorObject.h in CopyFiles */,
+				BF0B5BB32021286B0074CFB9 /* GTLRObject.h in CopyFiles */,
+				BF0B5BB42021286B0074CFB9 /* GTLRQuery.h in CopyFiles */,
+				BF0B5BB52021286B0074CFB9 /* GTLRRuntimeCommon.h in CopyFiles */,
+				BF0B5BB62021286B0074CFB9 /* GTLRService.h in CopyFiles */,
+				BF0B5BB72021286B0074CFB9 /* GTLRUploadParameters.h in CopyFiles */,
+				BF0B5BB82021286B0074CFB9 /* GTLRDrive.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +104,9 @@
 		BF001E9B201A9FAB00E1BE91 /* GTLRRuntimeCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRRuntimeCommon.h; path = Google/GoogleAPI/Source/Objects/GTLRRuntimeCommon.h; sourceTree = "<group>"; };
 		BF001E9C201A9FAB00E1BE91 /* GTLRQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRQuery.h; path = Google/GoogleAPI/Source/Objects/GTLRQuery.h; sourceTree = "<group>"; };
 		BF001EAB201A9FD200E1BE91 /* GTLRDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLRDefines.h; path = Google/GoogleAPI/Source/GTLRDefines.h; sourceTree = "<group>"; };
+		BF0B5BC2202129540074CFB9 /* GTMSessionFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GTMSessionFetcher.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcher.h"; sourceTree = "<group>"; };
+		BF0B5BC3202129540074CFB9 /* GTMSessionFetcherService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GTMSessionFetcherService.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcherService.h"; sourceTree = "<group>"; };
+		BF0B5BC6202129790074CFB9 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Google/module.modulemap; sourceTree = "<group>"; };
 		BF14BC90201EECA1007D5292 /* DriveService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveService.swift; sourceTree = "<group>"; };
 		BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = Google/GoogleSignIn.framework; sourceTree = "<group>"; };
 		BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignInDependencies.framework; path = Google/GoogleSignInDependencies.framework; sourceTree = "<group>"; };
@@ -150,6 +189,8 @@
 		BF4D49AC201EE48E00C91218 /* gtm-session-fetcher */ = {
 			isa = PBXGroup;
 			children = (
+				BF0B5BC2202129540074CFB9 /* GTMSessionFetcher.h */,
+				BF0B5BC3202129540074CFB9 /* GTMSessionFetcherService.h */,
 				BF4D49B1201EE49800C91218 /* GTMGatherInputStream.h */,
 				BF4D49B2201EE49800C91218 /* GTMGatherInputStream.m */,
 				BF4D49AE201EE49800C91218 /* GTMMIMEDocument.h */,
@@ -203,6 +244,7 @@
 		BFECFAD520169EA20012B9FC /* libGoogleDrive */ = {
 			isa = PBXGroup;
 			children = (
+				BF0B5BC6202129790074CFB9 /* module.modulemap */,
 				BF001EAB201A9FD200E1BE91 /* GTLRDefines.h */,
 				BFECFADD20169EDC0012B9FC /* GTLRCommon_Sources.m */,
 				BF001E92201A9FA000E1BE91 /* General */,
@@ -473,16 +515,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Google/GoogleAPI/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Source/Objects\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Source/Utilities\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/gtm-session-fetcher/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source/iOS\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/GTMOAuth2KeychainCompatibility\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/iOS\"",
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -537,16 +569,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Google/GoogleAPI/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Source/Objects\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Source/Utilities\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/gtm-session-fetcher/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source/iOS\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/GTMOAuth2KeychainCompatibility\"",
-					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/iOS\"",
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -570,7 +592,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Google",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -584,7 +605,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rileytestut.Harmony-Drive";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Google\"";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -604,7 +624,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Google",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -618,7 +637,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rileytestut.Harmony-Drive";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Google\"";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -659,15 +677,21 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6XVY5G3U44;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"GTMAPPAUTH_USER_IMPORTS=1",
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Google/GoogleAPI/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Source/Objects\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Source/Utilities\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/gtm-session-fetcher/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source/iOS\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/GTMOAuth2KeychainCompatibility\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/iOS\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = GoogleDrive;
 				SKIP_INSTALL = YES;
@@ -680,12 +704,18 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6XVY5G3U44;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = "GTMAPPAUTH_USER_IMPORTS=1";
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Google/GoogleAPI/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Source/Objects\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Source/Utilities\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/gtm-session-fetcher/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/AppAuth/Source/iOS\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/GTMOAuth2KeychainCompatibility\"",
+					"\"$(SRCROOT)/Google/GoogleAPI/Deps/GTMAppAuth/Source/iOS\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = GoogleDrive;
 				SKIP_INSTALL = YES;

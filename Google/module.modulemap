@@ -1,21 +1,21 @@
 module GoogleDrive {
-    umbrella header "GoogleAPI/Source/GeneratedServices/Drive/GTLRDrive.h"
+    umbrella header "GTLRDrive.h"
 
-    header "GoogleAPI/Source/GTLRDefines.h"
+    header "GTLRDefines.h"
 
-    header "GoogleAPI/Source/Objects/GTLRBatchQuery.h"
-    header "GoogleAPI/Source/Objects/GTLRBatchResult.h"
-    header "GoogleAPI/Source/Objects/GTLRDateTime.h"
-    header "GoogleAPI/Source/Objects/GTLRDuration.h"
-    header "GoogleAPI/Source/Objects/GTLRErrorObject.h"
-    header "GoogleAPI/Source/Objects/GTLRObject.h"
-    header "GoogleAPI/Source/Objects/GTLRQuery.h"
-    header "GoogleAPI/Source/Objects/GTLRRuntimeCommon.h"
-    header "GoogleAPI/Source/Objects/GTLRService.h"
-    header "GoogleAPI/Source/Objects/GTLRUploadParameters.h"
+    header "GTLRBatchQuery.h"
+    header "GTLRBatchResult.h"
+    header "GTLRDateTime.h"
+    header "GTLRDuration.h"
+    header "GTLRErrorObject.h"
+    header "GTLRObject.h"
+    header "GTLRQuery.h"
+    header "GTLRRuntimeCommon.h"
+    header "GTLRService.h"
+    header "GTLRUploadParameters.h"
     
-    header "GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcher.h"
-    header "GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcherService.h"
+    header "GTMSessionFetcher.h"
+    header "GTMSessionFetcherService.h"
 
     export *
 }
