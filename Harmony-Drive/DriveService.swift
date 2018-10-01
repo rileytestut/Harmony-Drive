@@ -42,6 +42,10 @@ public class DriveService: NSObject, Service
             scopes.append(kGTLRAuthScopeDriveAppdata)
             GIDSignIn.sharedInstance().scopes = scopes
         }
+        
+        super.init()
+        
+        self.service.shouldFetchNextPages = true
     }
 }
 

@@ -27,6 +27,8 @@
 		BF0B5BC42021295D0074CFB9 /* GTMSessionFetcher.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC2202129540074CFB9 /* GTMSessionFetcher.h */; };
 		BF0B5BC52021295D0074CFB9 /* GTMSessionFetcherService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC3202129540074CFB9 /* GTMSessionFetcherService.h */; };
 		BF0B5BC72021297F0074CFB9 /* module.modulemap in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF0B5BC6202129790074CFB9 /* module.modulemap */; };
+		BF0B5BCA20212D7C0074CFB9 /* DriveService+FetchRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0B5BC920212D7C0074CFB9 /* DriveService+FetchRecords.swift */; };
+		BF0B5BCD202155E90074CFB9 /* RemoteRecord+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */; };
 		BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF14BC90201EECA1007D5292 /* DriveService.swift */; };
 		BF4D498B201EDF1800C91218 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */; };
 		BF4D498C201EDF1800C91218 /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */; };
@@ -107,6 +109,8 @@
 		BF0B5BC2202129540074CFB9 /* GTMSessionFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GTMSessionFetcher.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcher.h"; sourceTree = "<group>"; };
 		BF0B5BC3202129540074CFB9 /* GTMSessionFetcherService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GTMSessionFetcherService.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMSessionFetcherService.h"; sourceTree = "<group>"; };
 		BF0B5BC6202129790074CFB9 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Google/module.modulemap; sourceTree = "<group>"; };
+		BF0B5BC920212D7C0074CFB9 /* DriveService+FetchRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DriveService+FetchRecords.swift"; sourceTree = "<group>"; };
+		BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteRecord+File.swift"; sourceTree = "<group>"; };
 		BF14BC90201EECA1007D5292 /* DriveService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveService.swift; sourceTree = "<group>"; };
 		BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = Google/GoogleSignIn.framework; sourceTree = "<group>"; };
 		BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignInDependencies.framework; path = Google/GoogleSignInDependencies.framework; sourceTree = "<group>"; };
@@ -186,6 +190,22 @@
 			name = General;
 			sourceTree = "<group>";
 		};
+		BF0B5BC820212D2D0074CFB9 /* Fetch Records */ = {
+			isa = PBXGroup;
+			children = (
+				BF0B5BC920212D7C0074CFB9 /* DriveService+FetchRecords.swift */,
+			);
+			path = "Fetch Records";
+			sourceTree = "<group>";
+		};
+		BF0B5BCB202155B90074CFB9 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		BF4D49AC201EE48E00C91218 /* gtm-session-fetcher */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,6 +247,8 @@
 			children = (
 				BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */,
 				BF14BC90201EECA1007D5292 /* DriveService.swift */,
+				BF0B5BC820212D2D0074CFB9 /* Fetch Records */,
+				BF0B5BCB202155B90074CFB9 /* Extensions */,
 				BFECF9FD2016982D0012B9FC /* Info.plist */,
 			);
 			path = "Harmony-Drive";
@@ -424,7 +446,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF0B5BCA20212D7C0074CFB9 /* DriveService+FetchRecords.swift in Sources */,
 				BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */,
+				BF0B5BCD202155E90074CFB9 /* RemoteRecord+File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
