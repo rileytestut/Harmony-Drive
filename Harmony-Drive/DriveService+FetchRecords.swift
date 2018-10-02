@@ -37,7 +37,7 @@ public extension DriveService
             }
             
             context.performAndWait {
-                let records = files.flatMap { RemoteRecord(file: $0, status: .normal, context: context) }
+                let records = files.compactMap { RemoteRecord(file: $0, status: .normal, context: context) }
                 filesResult = .success(Set(records))
             }
             
