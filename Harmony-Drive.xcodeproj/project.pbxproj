@@ -39,6 +39,7 @@
 		BF4D49B4201EE49800C91218 /* GTMReadMonitorInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4D49B0201EE49800C91218 /* GTMReadMonitorInputStream.m */; };
 		BF4D49B5201EE49800C91218 /* GTMGatherInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4D49B2201EE49800C91218 /* GTMGatherInputStream.m */; };
 		BF6C058C201FBEDA00271895 /* Harmony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF6C058D201FBEDA00271895 /* Harmony.framework */; };
+		BF9A367E2163E69000F8EE91 /* DriveService+Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9A367D2163E69000F8EE91 /* DriveService+Upload.swift */; };
 		BFECFA032016982E0012B9FC /* Harmony_Drive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */; };
 		BFECFA082016982E0012B9FC /* Harmony_DriveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFECFA072016982E0012B9FC /* Harmony_DriveTests.swift */; };
 		BFECFADE20169EDC0012B9FC /* GTLRCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = BFECFADD20169EDC0012B9FC /* GTLRCommon_Sources.m */; };
@@ -124,6 +125,7 @@
 		BF4D49B1201EE49800C91218 /* GTMGatherInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMGatherInputStream.h; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMGatherInputStream.h"; sourceTree = "<group>"; };
 		BF4D49B2201EE49800C91218 /* GTMGatherInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMGatherInputStream.m; path = "Google/GoogleAPI/Deps/gtm-session-fetcher/Source/GTMGatherInputStream.m"; sourceTree = "<group>"; };
 		BF6C058D201FBEDA00271895 /* Harmony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Harmony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF9A367D2163E69000F8EE91 /* DriveService+Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DriveService+Upload.swift"; sourceTree = "<group>"; };
 		BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Harmony_Drive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Harmony_Drive.h; sourceTree = "<group>"; };
 		BFECF9FD2016982D0012B9FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -190,14 +192,6 @@
 			name = General;
 			sourceTree = "<group>";
 		};
-		BF0B5BC820212D2D0074CFB9 /* Fetch Records */ = {
-			isa = PBXGroup;
-			children = (
-				BF0B5BC920212D7C0074CFB9 /* DriveService+FetchRecords.swift */,
-			);
-			path = "Fetch Records";
-			sourceTree = "<group>";
-		};
 		BF0B5BCB202155B90074CFB9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,7 +241,8 @@
 			children = (
 				BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */,
 				BF14BC90201EECA1007D5292 /* DriveService.swift */,
-				BF0B5BC820212D2D0074CFB9 /* Fetch Records */,
+				BF0B5BC920212D7C0074CFB9 /* DriveService+FetchRecords.swift */,
+				BF9A367D2163E69000F8EE91 /* DriveService+Upload.swift */,
 				BF0B5BCB202155B90074CFB9 /* Extensions */,
 				BFECF9FD2016982D0012B9FC /* Info.plist */,
 			);
@@ -449,6 +444,7 @@
 				BF0B5BCA20212D7C0074CFB9 /* DriveService+FetchRecords.swift in Sources */,
 				BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */,
 				BF0B5BCD202155E90074CFB9 /* RemoteRecord+File.swift in Sources */,
+				BF9A367E2163E69000F8EE91 /* DriveService+Upload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
