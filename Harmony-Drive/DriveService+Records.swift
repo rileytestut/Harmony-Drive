@@ -1,5 +1,5 @@
 //
-//  DriveService+FetchRecords.swift
+//  DriveService+Records.swift
 //  Harmony-Drive
 //
 //  Created by Riley Testut on 1/30/18.
@@ -154,6 +154,113 @@ public extension DriveService
         progress.cancellationHandler = {
             ticket.cancel()
             completionHandler(.failure(FetchRecordsError.cancelled))
+        }
+        
+        return progress
+    }
+}
+
+public extension DriveService
+{
+    func upload(_ record: LocalRecord, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
+    {
+        let progress = Progress.discreteProgress(totalUnitCount: 1)
+        
+        guard let context = record.managedObjectContext else {
+            completionHandler(.failure(UploadRecordError.nilManagedObjectContext))
+            return progress
+        }
+        
+        do
+        {
+            let data = try JSONEncoder().encode(record)
+            
+            let metadata = GTLRDrive_File()
+            metadata.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
+            metadata.mimeType = "application/json"
+            
+            let uploadParameters = GTLRUploadParameters(data: data, mimeType: "application/json")
+            uploadParameters.shouldUploadWithSingleRequest = true
+            
+            let query: GTLRDriveQuery
+            
+            if let identifier = record.remoteRecord?.identifier
+            {
+                query = GTLRDriveQuery_FilesUpdate.query(withObject: metadata, fileId: identifier, uploadParameters: uploadParameters)
+            }
+            else
+            {
+                query = GTLRDriveQuery_FilesCreate.query(withObject: metadata, uploadParameters: uploadParameters)
+            }
+            
+            query.fields = "id, mimeType, name, version, modifiedTime"
+            
+            let ticket = self.service.executeQuery(query) { (ticket, file, error) in
+                guard error == nil else {
+                    return completionHandler(.failure(UploadRecordError.service(error! as NSError)))
+                }
+                
+                context.perform {
+                    guard let file = file as? GTLRDrive_File, let remoteRecord = RemoteRecord(file: file, status: .normal, context: context) else {
+                        return completionHandler(.failure(UploadRecordError.invalidResponse))
+                    }
+                    
+                    completionHandler(.success(remoteRecord))
+                }
+            }
+            
+            progress.cancellationHandler = {
+                ticket.cancel()
+                completionHandler(.failure(UploadRecordError.cancelled))
+            }
+        }
+        catch
+        {
+            completionHandler(.failure(error))
+        }
+        
+        return progress
+    }
+    
+    func download(_ record: RemoteRecord, completionHandler: @escaping (Result<LocalRecord>) -> Void) -> Progress
+    {
+        let progress = Progress.discreteProgress(totalUnitCount: 1)
+        
+        guard let context = record.managedObjectContext else {
+            completionHandler(.failure(DownloadRecordError.nilManagedObjectContext))
+            return progress
+        }
+        
+        let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: record.identifier)
+        
+        let ticket = self.service.executeQuery(query) { (ticket, file, error) in
+            guard error == nil else {
+                return completionHandler(.failure(DownloadRecordError.service(error! as NSError)))
+            }
+            
+            context.perform {
+                guard let file = file as? GTLRDataObject else {
+                    return completionHandler(.failure(UploadRecordError.invalidResponse))
+                }
+                
+                do
+                {
+                    let decoder = JSONDecoder()
+                    decoder.managedObjectContext = context
+                    
+                    let record = try decoder.decode(LocalRecord.self, from: file.data)
+                    completionHandler(.success(record))
+                }
+                catch
+                {
+                    completionHandler(.failure(error))
+                }
+            }
+        }
+        
+        progress.cancellationHandler = {
+            ticket.cancel()
+            completionHandler(.failure(DownloadRecordError.cancelled))
         }
         
         return progress
