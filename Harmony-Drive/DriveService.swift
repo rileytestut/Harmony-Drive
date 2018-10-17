@@ -80,15 +80,6 @@ public extension DriveService
     }
 }
 
-public extension DriveService
-{
-    func fetchRemoteRecords(sinceChangeToken changeToken: Data?, context: NSManagedObjectContext, completionHandler: @escaping (Result<Set<RemoteRecord>>) -> Void) -> Progress
-    {
-        let progress = Progress()
-        return progress
-    }
-}
-
 extension DriveService: GIDSignInDelegate
 {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!)

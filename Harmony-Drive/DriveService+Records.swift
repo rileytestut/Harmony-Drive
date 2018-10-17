@@ -162,14 +162,9 @@ public extension DriveService
 
 public extension DriveService
 {
-    func upload(_ record: LocalRecord, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
+    func upload(_ record: LocalRecord, context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
-        
-        guard let context = record.managedObjectContext else {
-            completionHandler(.failure(UploadRecordError.nilManagedObjectContext))
-            return progress
-        }
         
         do
         {
@@ -184,7 +179,7 @@ public extension DriveService
             
             let query: GTLRDriveQuery
             
-            if let identifier = record.remoteRecord?.identifier
+            if let identifier = record.managedRecord?.remoteRecord?.identifier
             {
                 query = GTLRDriveQuery_FilesUpdate.query(withObject: metadata, fileId: identifier, uploadParameters: uploadParameters)
             }
@@ -222,14 +217,9 @@ public extension DriveService
         return progress
     }
     
-    func download(_ record: RemoteRecord, completionHandler: @escaping (Result<LocalRecord>) -> Void) -> Progress
+    func download(_ record: RemoteRecord, context: NSManagedObjectContext, completionHandler: @escaping (Result<LocalRecord>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
-        
-        guard let context = record.managedObjectContext else {
-            completionHandler(.failure(DownloadRecordError.nilManagedObjectContext))
-            return progress
-        }
         
         let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: record.identifier)
         
