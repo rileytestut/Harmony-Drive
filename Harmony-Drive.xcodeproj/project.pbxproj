@@ -30,6 +30,8 @@
 		BF0B5BCA20212D7C0074CFB9 /* DriveService+Records.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0B5BC920212D7C0074CFB9 /* DriveService+Records.swift */; };
 		BF0B5BCD202155E90074CFB9 /* RemoteRecord+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */; };
 		BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF14BC90201EECA1007D5292 /* DriveService.swift */; };
+		BF3915DD2181147000AF74E5 /* DriveService+Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3915DC2181147000AF74E5 /* DriveService+Files.swift */; };
+		BF3915DF21811DB100AF74E5 /* RemoteFile+File.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3915DE21811DB100AF74E5 /* RemoteFile+File.swift */; };
 		BF4D498B201EDF1800C91218 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */; };
 		BF4D498C201EDF1800C91218 /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */; };
 		BF4D498D201EDF1800C91218 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BF4D498A201EDF1800C91218 /* GoogleSignIn.bundle */; };
@@ -112,6 +114,8 @@
 		BF0B5BC920212D7C0074CFB9 /* DriveService+Records.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DriveService+Records.swift"; sourceTree = "<group>"; };
 		BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteRecord+File.swift"; sourceTree = "<group>"; };
 		BF14BC90201EECA1007D5292 /* DriveService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveService.swift; sourceTree = "<group>"; };
+		BF3915DC2181147000AF74E5 /* DriveService+Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DriveService+Files.swift"; sourceTree = "<group>"; };
+		BF3915DE21811DB100AF74E5 /* RemoteFile+File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteFile+File.swift"; sourceTree = "<group>"; };
 		BF4D4988201EDF1800C91218 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = Google/GoogleSignIn.framework; sourceTree = "<group>"; };
 		BF4D4989201EDF1800C91218 /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignInDependencies.framework; path = Google/GoogleSignInDependencies.framework; sourceTree = "<group>"; };
 		BF4D498A201EDF1800C91218 /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleSignIn.bundle; path = Google/GoogleSignIn.bundle; sourceTree = "<group>"; };
@@ -194,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */,
+				BF3915DE21811DB100AF74E5 /* RemoteFile+File.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -240,6 +245,7 @@
 				BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */,
 				BF14BC90201EECA1007D5292 /* DriveService.swift */,
 				BF0B5BC920212D7C0074CFB9 /* DriveService+Records.swift */,
+				BF3915DC2181147000AF74E5 /* DriveService+Files.swift */,
 				BF0B5BCB202155B90074CFB9 /* Extensions */,
 				BFECF9FD2016982D0012B9FC /* Info.plist */,
 			);
@@ -438,6 +444,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF3915DF21811DB100AF74E5 /* RemoteFile+File.swift in Sources */,
+				BF3915DD2181147000AF74E5 /* DriveService+Files.swift in Sources */,
 				BF0B5BCA20212D7C0074CFB9 /* DriveService+Records.swift in Sources */,
 				BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */,
 				BF0B5BCD202155E90074CFB9 /* RemoteRecord+File.swift in Sources */,

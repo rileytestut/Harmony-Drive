@@ -21,7 +21,7 @@ extension RemoteRecord
         
         guard
             let identifier = file.identifier,
-            let versionIdentifier = file.version?.description,
+            let versionIdentifier = file.headRevisionId,
             let versionDate = file.modifiedTime?.date
         else { return nil }
         
