@@ -16,7 +16,7 @@ import GoogleDrive
 
 public extension DriveService
 {
-    public func upload(_ file: File, for record: LocalRecord, completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
+    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: String], completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -24,7 +24,7 @@ public extension DriveService
         
         let fetchQuery = GTLRDriveQuery_FilesList.query()
         fetchQuery.q = "name = '\(filename)'"
-        fetchQuery.fields = "nextPageToken, files(id, mimeType, name, headRevisionId, modifiedTime)"
+        fetchQuery.fields = "nextPageToken, files(\(fileQueryFields))"
 
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
             guard error == nil else {
@@ -35,9 +35,10 @@ public extension DriveService
                 return completionHandler(.failure(FetchError(code: .invalidResponse)))
             }
             
-            let metadata = GTLRDrive_File()
-            metadata.name = filename
-            metadata.mimeType = "application/octet-stream"
+            let driveFile = GTLRDrive_File()
+            driveFile.name = filename
+            driveFile.mimeType = "application/octet-stream"
+            driveFile.appProperties = GTLRDrive_File_AppProperties(json: metadata)
             
             let uploadParameters = GTLRUploadParameters(fileURL: file.fileURL, mimeType: "application/octet-stream")
             
@@ -45,14 +46,14 @@ public extension DriveService
             
             if let file = files.first, let identifier = file.identifier
             {
-                uploadQuery = GTLRDriveQuery_FilesUpdate.query(withObject: metadata, fileId: identifier, uploadParameters: uploadParameters)
+                uploadQuery = GTLRDriveQuery_FilesUpdate.query(withObject: driveFile, fileId: identifier, uploadParameters: uploadParameters)
             }
             else
             {
-                uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: metadata, uploadParameters: uploadParameters)
+                uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)
             }
             
-            uploadQuery.fields = "id, mimeType, name, headRevisionId, modifiedTime"
+            uploadQuery.fields = fileQueryFields
             
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
                 guard error == nil else {

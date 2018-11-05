@@ -24,7 +24,7 @@ public extension DriveService
         
         let filesQuery = GTLRDriveQuery_FilesList.query()
         filesQuery.pageSize = 1000
-        filesQuery.fields = "nextPageToken, files(id, mimeType, name, headRevisionId, modifiedTime)"
+        filesQuery.fields = "nextPageToken, files(\(fileQueryFields))"
         filesQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
                 filesResult = .failure(FetchError(code: .any(error!)))
@@ -112,7 +112,7 @@ public extension DriveService
         }
         
         let query = GTLRDriveQuery_ChangesList.query(withPageToken: pageToken)
-        query.fields = "nextPageToken, newStartPageToken, changes(fileId, type, removed, file(id, mimeType, name, headRevisionId, modifiedTime))"
+        query.fields = "nextPageToken, newStartPageToken, changes(fileId, type, removed, file(\(fileQueryFields)))"
         query.includeRemoved = true
         query.pageSize = 1000
         
@@ -162,7 +162,7 @@ public extension DriveService
 
 public extension DriveService
 {
-    func upload(_ record: LocalRecord, context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
+    func upload(_ record: LocalRecord, metadata: [HarmonyMetadataKey: String], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -175,9 +175,10 @@ public extension DriveService
         {
             let data = try JSONEncoder().encode(record)
             
-            let metadata = GTLRDrive_File()
-            metadata.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
-            metadata.mimeType = "application/json"
+            let file = GTLRDrive_File()
+            file.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
+            file.mimeType = "application/json"
+            file.appProperties = GTLRDrive_File_AppProperties(json: metadata)
             
             let uploadParameters = GTLRUploadParameters(data: data, mimeType: "application/json")
             uploadParameters.shouldUploadWithSingleRequest = true
@@ -186,14 +187,14 @@ public extension DriveService
             
             if let identifier = managedRecord.remoteRecord?.identifier, managedRecord.remoteRecord?.status != .deleted
             {
-                query = GTLRDriveQuery_FilesUpdate.query(withObject: metadata, fileId: identifier, uploadParameters: uploadParameters)
+                query = GTLRDriveQuery_FilesUpdate.query(withObject: file, fileId: identifier, uploadParameters: uploadParameters)
             }
             else
             {
-                query = GTLRDriveQuery_FilesCreate.query(withObject: metadata, uploadParameters: uploadParameters)
+                query = GTLRDriveQuery_FilesCreate.query(withObject: file, uploadParameters: uploadParameters)
             }
             
-            query.fields = "id, mimeType, name, headRevisionId, modifiedTime"
+            query.fields = fileQueryFields
             
             let ticket = self.service.executeQuery(query) { (ticket, file, error) in
                 context.perform {

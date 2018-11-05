@@ -14,6 +14,8 @@ import Harmony
 import GoogleSignIn
 import GoogleDrive
 
+let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties"
+
 public class DriveService: NSObject, Service
 {
     public static let shared = DriveService()

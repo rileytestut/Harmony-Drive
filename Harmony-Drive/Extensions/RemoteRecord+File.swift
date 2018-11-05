@@ -22,14 +22,10 @@ extension RemoteRecord
         guard
             let identifier = file.identifier,
             let versionIdentifier = file.headRevisionId,
-            let versionDate = file.modifiedTime?.date
+            let versionDate = file.modifiedTime?.date,
+            let metadata = file.appProperties?.json as? [HarmonyMetadataKey: String]
         else { return nil }
-        
-        guard let components = file.name?.split(separator: "-", maxSplits: 1), components.count == 2 else { return nil }
-        
-        let recordedObjectType = String(components[0])
-        let recordedObjectIdentifier = String(components[1])
-        
-        self.init(identifier: identifier, versionIdentifier: versionIdentifier, versionDate: versionDate, recordedObjectType: recordedObjectType, recordedObjectIdentifier: recordedObjectIdentifier, status: status, context: context)
+                
+        try? self.init(identifier: identifier, versionIdentifier: versionIdentifier, versionDate: versionDate, metadata: metadata, status: status, context: context)
     }
 }
