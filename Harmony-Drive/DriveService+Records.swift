@@ -162,7 +162,7 @@ public extension DriveService
 
 public extension DriveService
 {
-    func upload(_ record: LocalRecord, metadata: [HarmonyMetadataKey: String], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
+    func upload(_ record: LocalRecord, metadata: [HarmonyMetadataKey: Any], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteRecord>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -223,7 +223,7 @@ public extension DriveService
         return progress
     }
     
-    func download(_ record: RemoteRecord, context: NSManagedObjectContext, completionHandler: @escaping (Result<LocalRecord>) -> Void) -> Progress
+    func download(_ record: RemoteRecord, version: ManagedVersion, context: NSManagedObjectContext, completionHandler: @escaping (Result<LocalRecord>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -232,7 +232,7 @@ public extension DriveService
             return progress
         }
         
-        let query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: record.identifier)
+        let query = GTLRDriveQuery_RevisionsGet.queryForMedia(withFileId: record.identifier, revisionId: version.identifier)
         
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
             context.perform {
@@ -295,6 +295,44 @@ public extension DriveService
         progress.cancellationHandler = {
             ticket.cancel()
             completionHandler(.failure(DeleteError(record: managedRecord, code: .cancelled)))
+        }
+        
+        return progress
+    }
+    
+    public func updateMetadata(_ metadata: [HarmonyMetadataKey: Any], for record: RemoteRecord, completionHandler: @escaping (Result<Void>) -> Void) -> Progress
+    {
+        let progress = Progress.discreteProgress(totalUnitCount: 1)
+        
+        guard let managedRecord = record.managedRecord else {
+            completionHandler(.failure(AnyError(code: .nilManagedRecord)))
+            
+            return progress
+        }
+        
+        let driveFile = GTLRDrive_File()
+        driveFile.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
+        driveFile.mimeType = "application/json"
+        driveFile.appProperties = GTLRDrive_File_AppProperties(json: metadata)
+        
+        let query = GTLRDriveQuery_FilesUpdate.query(withObject: driveFile, fileId: record.identifier, uploadParameters: nil)
+        
+        let ticket = self.service.executeQuery(query) { (ticket, file, error) in
+            if let error = error
+            {
+                completionHandler(.failure(UploadError(record: managedRecord, code: .any(error))))
+            }
+            else
+            {
+                completionHandler(.success)
+            }
+            
+            progress.completedUnitCount = 1
+        }
+        
+        progress.cancellationHandler = {
+            ticket.cancel()
+            completionHandler(.failure(UploadError(record: managedRecord, code: .cancelled)))
         }
         
         return progress

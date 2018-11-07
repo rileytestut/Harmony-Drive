@@ -16,7 +16,7 @@ import GoogleDrive
 
 public extension DriveService
 {
-    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: String], completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
+    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: Any], completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -50,7 +50,7 @@ public extension DriveService
             }
             else
             {
-                uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)
+                uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)                
             }
             
             uploadQuery.fields = fileQueryFields
