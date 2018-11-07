@@ -16,7 +16,7 @@ import GoogleDrive
 
 public extension DriveService
 {
-    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: Any], completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
+    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: Any], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -32,7 +32,7 @@ public extension DriveService
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                return completionHandler(.failure(FetchError(code: .invalidResponse)))
+                return completionHandler(.failure(UploadFileError(file: file, code: .invalidResponse)))
             }
             
             let driveFile = GTLRDrive_File()
@@ -56,15 +56,17 @@ public extension DriveService
             uploadQuery.fields = fileQueryFields
             
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
-                guard error == nil else {
-                    return completionHandler(.failure(UploadFileError(file: file, code: .any(error!))))
+                context.perform {
+                    guard error == nil else {
+                        return completionHandler(.failure(UploadFileError(file: file, code: .any(error!))))
+                    }
+                    
+                    guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile, context: context) else {
+                        return completionHandler(.failure(UploadFileError(file: file, code: .invalidResponse)))
+                    }
+                    
+                    completionHandler(.success(remoteFile))
                 }
-                
-                guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile) else {
-                    return completionHandler(.failure(UploadFileError(file: file, code: .invalidResponse)))
-                }
-                
-                completionHandler(.success(remoteFile))
             }
             
             progress.cancellationHandler = {
@@ -85,6 +87,8 @@ public extension DriveService
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
+        let fileIdentifier = remoteFile.identifier
+        
         let query = GTLRDriveQuery_RevisionsGet.queryForMedia(withFileId: remoteFile.remoteIdentifier, revisionId: remoteFile.versionIdentifier)
         
         let ticket = self.service.executeQuery(query) { (ticket, data, error) in
@@ -101,8 +105,7 @@ public extension DriveService
                 let fileURL = FileManager.default.uniqueTemporaryURL()
                 try data.data.write(to: fileURL)
                 
-                let file = File(identifier: remoteFile.identifier, fileURL: fileURL)
-                
+                let file = File(identifier: fileIdentifier, fileURL: fileURL)
                 completionHandler(.success(file))
             }
             catch

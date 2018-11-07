@@ -15,7 +15,7 @@ import GoogleDrive
 
 extension RemoteFile
 {
-    init?(file: GTLRDrive_File)
+    convenience init?(file: GTLRDrive_File, context: NSManagedObjectContext)
     {        
         guard
             let remoteIdentifier = file.identifier,
@@ -23,6 +23,6 @@ extension RemoteFile
             let metadata = file.appProperties?.json as? [HarmonyMetadataKey: String]
         else { return nil }
         
-        try? self.init(remoteIdentifier: remoteIdentifier, versionIdentifier: versionIdentifier, metadata: metadata)
+        try? self.init(remoteIdentifier: remoteIdentifier, versionIdentifier: versionIdentifier, metadata: metadata, context: context)
     }
 }
