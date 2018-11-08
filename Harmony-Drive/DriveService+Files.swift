@@ -93,7 +93,14 @@ public extension DriveService
         
         let ticket = self.service.executeQuery(query) { (ticket, data, error) in
             guard error == nil else {
-                return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .any(error!))))
+                if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
+                {
+                    return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .fileDoesNotExist)))
+                }
+                else
+                {
+                    return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .any(error!))))
+                }
             }
             
             guard let data = data as? GTLRDataObject else {
@@ -117,6 +124,40 @@ public extension DriveService
         progress.cancellationHandler = {
             ticket.cancel()
             completionHandler(.failure(DownloadFileError(file: remoteFile, code: .cancelled)))
+        }
+        
+        return progress
+    }
+    
+    public func delete(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<Void>) -> Void) -> Progress
+    {
+        let progress = Progress.discreteProgress(totalUnitCount: 1)
+        
+        let query = GTLRDriveQuery_FilesDelete.query(withFileId: remoteFile.remoteIdentifier)
+        
+        let ticket = self.service.executeQuery(query) { (ticket, file, error) in
+            if let error = error
+            {
+                if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
+                {
+                    completionHandler(.failure(DeleteFileError(file: remoteFile, code: .fileDoesNotExist)))
+                }
+                else
+                {
+                    completionHandler(.failure(DeleteFileError(file: remoteFile, code: .any(error))))
+                }
+            }
+            else
+            {
+                completionHandler(.success)
+            }
+            
+            progress.completedUnitCount = 1
+        }
+        
+        progress.cancellationHandler = {
+            ticket.cancel()
+            completionHandler(.failure(DeleteFileError(file: remoteFile, code: .cancelled)))
         }
         
         return progress

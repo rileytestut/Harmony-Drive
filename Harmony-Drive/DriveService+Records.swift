@@ -237,7 +237,14 @@ public extension DriveService
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
             context.perform {
                 guard error == nil else {
-                    return completionHandler(.failure(DownloadError(record: managedRecord, code: .any(error!))))
+                    if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
+                    {
+                        return completionHandler(.failure(DownloadError(record: managedRecord, code: .recordDoesNotExist)))
+                    }
+                    else
+                    {
+                       return completionHandler(.failure(DownloadError(record: managedRecord, code: .any(error!))))
+                    }
                 }
                 
                 guard let file = file as? GTLRDataObject else {
@@ -282,7 +289,14 @@ public extension DriveService
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
             if let error = error
             {
-                completionHandler(.failure(DeleteError(record: managedRecord, code: .any(error))))
+                if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
+                {
+                    completionHandler(.failure(DeleteError(record: managedRecord, code: .recordDoesNotExist)))
+                }
+                else
+                {
+                    completionHandler(.failure(DeleteError(record: managedRecord, code: .any(error))))
+                }
             }
             else
             {
