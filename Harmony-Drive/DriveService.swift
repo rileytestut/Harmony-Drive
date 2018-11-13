@@ -69,7 +69,10 @@ public extension DriveService
 
         GIDSignIn.sharedInstance().delegate = self
 
-        GIDSignIn.sharedInstance().signInSilently()
+        // Must run on main thread.
+        DispatchQueue.main.async {
+            GIDSignIn.sharedInstance().signInSilently()
+        }
     }
     
     func deauthenticate(completionHandler: @escaping (Result<Void>) -> Void)
