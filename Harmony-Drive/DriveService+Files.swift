@@ -55,6 +55,12 @@ public extension DriveService
             
             uploadQuery.fields = fileQueryFields
             
+            let executionParameters = GTLRServiceExecutionParameters()
+            executionParameters.uploadProgressBlock = { (ticket, uploadedBytes, totalBytes) in
+                progress.totalUnitCount = Int64(totalBytes)
+                progress.completedUnitCount = Int64(uploadedBytes)
+            }
+            
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
                 context.perform {
                     guard error == nil else {
@@ -86,12 +92,22 @@ public extension DriveService
     public func download(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<File>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
+        progress.totalUnitCount = Int64(remoteFile.size)
+        progress.kind = .file
         
         let fileIdentifier = remoteFile.identifier
         
         let query = GTLRDriveQuery_RevisionsGet.queryForMedia(withFileId: remoteFile.remoteIdentifier, revisionId: remoteFile.versionIdentifier)
+        let downloadRequest = self.service.request(for: query) as URLRequest
         
-        let ticket = self.service.executeQuery(query) { (ticket, data, error) in
+        let fileURL = FileManager.default.uniqueTemporaryURL()
+        
+        let fetcher = self.service.fetcherService.fetcher(with: downloadRequest)
+        fetcher.destinationFileURL = fileURL
+        fetcher.downloadProgressBlock = { (bytesWritten, totalBytesWritten, totalBytes) in
+            progress.completedUnitCount = totalBytesWritten
+        }
+        fetcher.beginFetch { (_, error) in
             guard error == nil else {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
@@ -103,26 +119,16 @@ public extension DriveService
                 }
             }
             
-            guard let data = data as? GTLRDataObject else {
+            guard FileManager.default.fileExists(atPath: fileURL.path) else {
                 return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .invalidResponse)))
             }
             
-            do
-            {
-                let fileURL = FileManager.default.uniqueTemporaryURL()
-                try data.data.write(to: fileURL)
-                
-                let file = File(identifier: fileIdentifier, fileURL: fileURL)
-                completionHandler(.success(file))
-            }
-            catch
-            {
-                completionHandler(.failure(DownloadFileError(file: remoteFile, code: .any(error))))
-            }
+            let file = File(identifier: fileIdentifier, fileURL: fileURL)
+            completionHandler(.success(file))
         }
-        
+
         progress.cancellationHandler = {
-            ticket.cancel()
+            fetcher.stopFetching()
             completionHandler(.failure(DownloadFileError(file: remoteFile, code: .cancelled)))
         }
         

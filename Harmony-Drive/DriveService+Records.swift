@@ -207,6 +207,8 @@ public extension DriveService
                     }
                     
                     completionHandler(.success(remoteRecord))
+                    
+                    progress.completedUnitCount += 1
                 }
             }
             
@@ -258,6 +260,8 @@ public extension DriveService
                     
                     let record = try decoder.decode(LocalRecord.self, from: file.data)
                     completionHandler(.success(record))
+                    
+                    progress.completedUnitCount += 1
                 }
                 catch
                 {

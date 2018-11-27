@@ -20,9 +20,10 @@ extension RemoteFile
         guard
             let remoteIdentifier = file.identifier,
             let versionIdentifier = file.headRevisionId,
+            let size = file.size as? Int,
             let metadata = file.appProperties?.json as? [HarmonyMetadataKey: String]
         else { return nil }
         
-        try? self.init(remoteIdentifier: remoteIdentifier, versionIdentifier: versionIdentifier, metadata: metadata, context: context)
+        try? self.init(remoteIdentifier: remoteIdentifier, versionIdentifier: versionIdentifier, size: size, metadata: metadata, context: context)
     }
 }

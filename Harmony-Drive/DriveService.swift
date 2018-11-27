@@ -14,7 +14,7 @@ import Harmony
 import GoogleSignIn
 import GoogleDrive
 
-let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties"
+let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties, size"
 
 public class DriveService: NSObject, Service
 {
