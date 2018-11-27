@@ -15,7 +15,7 @@ import GoogleDrive
 
 extension RemoteRecord
 {
-    convenience init?(file: GTLRDrive_File, status: RecordRepresentation.Status, context: NSManagedObjectContext)
+    convenience init?(file: GTLRDrive_File, status: RecordStatus, context: NSManagedObjectContext)
     {
         guard let mimeType = file.mimeType, mimeType == "application/json" else { return nil }
         
