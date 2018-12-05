@@ -105,15 +105,15 @@ extension DriveService: GIDSignInDelegate
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.canceled.rawValue
             {
-                result = .failure(AuthenticationError(code: .cancelled))
+                result = .failure(_AuthenticationError(code: .cancelled))
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue
             {
-                result = .failure(AuthenticationError(code: .noSavedCredentials))
+                result = .failure(_AuthenticationError(code: .noSavedCredentials))
             }
             catch
             {
-                result = .failure(AuthenticationError(code: .any(error)))
+                result = .failure(_AuthenticationError(code: .any(error)))
             }
         }
 
@@ -127,7 +127,7 @@ extension DriveService: GIDSignInDelegate
         
         if let error = error
         {
-            result = .failure(AuthenticationError(code: .any(error)))
+            result = .failure(_AuthenticationError(code: .any(error)))
         }
         else
         {

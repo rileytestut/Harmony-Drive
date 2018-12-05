@@ -27,12 +27,12 @@ public extension DriveService
         filesQuery.fields = "nextPageToken, files(\(fileQueryFields))"
         filesQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
-                filesResult = .failure(FetchError(code: .any(error!)))
+                filesResult = .failure(_FetchError(code: .any(error!)))
                 return
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                filesResult = .failure(FetchError(code: .invalidResponse))
+                filesResult = .failure(_FetchError(code: .invalidResponse))
                 return
             }
             
@@ -47,17 +47,17 @@ public extension DriveService
         let changeTokenQuery = GTLRDriveQuery_ChangesGetStartPageToken.query()
         changeTokenQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
-                tokenResult = .failure(FetchError(code: .any(error!)))
+                tokenResult = .failure(_FetchError(code: .any(error!)))
                 return
             }
 
             guard let result = object as? GTLRDrive_StartPageToken, let token = result.startPageToken else {
-                tokenResult = .failure(FetchError(code: .invalidResponse))
+                tokenResult = .failure(_FetchError(code: .invalidResponse))
                 return
             }
 
             guard let data = token.data(using: .utf8) else {
-                tokenResult = .failure(FetchError(code: .invalidResponse))
+                tokenResult = .failure(_FetchError(code: .invalidResponse))
                 return
             }
 
@@ -69,16 +69,16 @@ public extension DriveService
         let batchQuery = GTLRBatchQuery(queries: [filesQuery, changeTokenQuery])
 
         let ticket = self.service.executeQuery(batchQuery) { (ticket, object, error) in
-            guard let filesResult = filesResult, let tokenResult = tokenResult else { return completionHandler(.failure(FetchError(code: .unknown))) }
+            guard let filesResult = filesResult, let tokenResult = tokenResult else { return completionHandler(.failure(_FetchError(code: .unknown))) }
             
             let result: Result<(Set<RemoteRecord>, Data)>
             
             switch (filesResult, tokenResult)
             {
             case (.success(let records), .success(let token)): result = .success((records, token))
-            case (.success, .failure(let error)): result = .failure(FetchError(code: .any(error)))
-            case (.failure(let error), .success): result = .failure(FetchError(code: .any(error)))
-            case (.failure(let error), .failure): result = .failure(FetchError(code: .any(error)))
+            case (.success, .failure(let error)): result = .failure(_FetchError(code: .any(error)))
+            case (.failure(let error), .success): result = .failure(_FetchError(code: .any(error)))
+            case (.failure(let error), .failure): result = .failure(_FetchError(code: .any(error)))
             }
             
             // Delete inserted RemoteRecords if filesResult is success, but the overall result is failure
@@ -96,7 +96,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(FetchError(code: .cancelled)))
+            completionHandler(.failure(_FetchError(code: .cancelled)))
         }
         
         return progress
@@ -107,7 +107,7 @@ public extension DriveService
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
         guard let pageToken = String(data: changeToken, encoding: .utf8) else {
-            completionHandler(.failure(FetchError(code: .invalidChangeToken)))
+            completionHandler(.failure(_FetchError(code: .invalidChangeToken(changeToken))))
             return progress
         }
         
@@ -117,13 +117,13 @@ public extension DriveService
         query.pageSize = 1000
         
         let ticket = self.service.executeQuery(query) { (ticket, object, error) in
-            guard error == nil else { return completionHandler(.failure(FetchError(code: .any(error!)))) }
+            guard error == nil else { return completionHandler(.failure(_FetchError(code: .any(error!)))) }
             
             guard let result = object as? GTLRDrive_ChangeList,
                 let newPageToken = result.newStartPageToken,
                 let tokenData = newPageToken.data(using: .utf8),
                 let changes = result.changes
-            else { return completionHandler(.failure(FetchError(code: .invalidResponse))) }
+            else { return completionHandler(.failure(_FetchError(code: .invalidResponse))) }
             
             context.perform {
                 
@@ -153,7 +153,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(FetchError(code: .cancelled)))
+            completionHandler(.failure(_FetchError(code: .cancelled)))
         }
         
         return progress
@@ -167,7 +167,7 @@ public extension DriveService
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
         guard let managedRecord = record.managedRecord else {
-            completionHandler(.failure(AnyError(code: .nilManagedRecord)))
+            completionHandler(.failure(_AnyError(code: .nilManagedRecord)))
             return progress
         }
         
@@ -199,11 +199,11 @@ public extension DriveService
             let ticket = self.service.executeQuery(query) { (ticket, file, error) in
                 context.perform {
                     guard error == nil else {
-                        return completionHandler(.failure(UploadError(record: managedRecord, code: .any(error!))))
+                        return completionHandler(.failure(_UploadError(record: managedRecord, code: .any(error!))))
                     }
                     
                     guard let file = file as? GTLRDrive_File, let remoteRecord = RemoteRecord(file: file, status: .normal, context: context) else {
-                        return completionHandler(.failure(UploadError(record: managedRecord, code: .invalidResponse)))
+                        return completionHandler(.failure(_UploadError(record: managedRecord, code: .invalidResponse)))
                     }
                     
                     completionHandler(.success(remoteRecord))
@@ -214,12 +214,12 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(UploadError(record: managedRecord, code: .cancelled)))
+                completionHandler(.failure(_UploadError(record: managedRecord, code: .cancelled)))
             }
         }
         catch
         {
-            completionHandler(.failure(UploadError(record: managedRecord, code: .any(error))))
+            completionHandler(.failure(_UploadError(record: managedRecord, code: .any(error))))
         }
         
         return progress
@@ -230,7 +230,7 @@ public extension DriveService
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
         guard let managedRecord = record.managedRecord else {
-            completionHandler(.failure(AnyError(code: .nilManagedRecord)))
+            completionHandler(.failure(_AnyError(code: .nilManagedRecord)))
             return progress
         }
         
@@ -241,16 +241,16 @@ public extension DriveService
                 guard error == nil else {
                     if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                     {
-                        return completionHandler(.failure(DownloadError(record: managedRecord, code: .recordDoesNotExist)))
+                        return completionHandler(.failure(_DownloadError(record: managedRecord, code: .recordDoesNotExist)))
                     }
                     else
                     {
-                       return completionHandler(.failure(DownloadError(record: managedRecord, code: .any(error!))))
+                       return completionHandler(.failure(_DownloadError(record: managedRecord, code: .any(error!))))
                     }
                 }
                 
                 guard let file = file as? GTLRDataObject else {
-                    return completionHandler(.failure(DownloadError(record: managedRecord, code: .invalidResponse)))
+                    return completionHandler(.failure(_DownloadError(record: managedRecord, code: .invalidResponse)))
                 }
                 
                 do
@@ -265,14 +265,14 @@ public extension DriveService
                 }
                 catch
                 {
-                    completionHandler(.failure(DownloadError(record: managedRecord, code: .any(error))))
+                    completionHandler(.failure(_DownloadError(record: managedRecord, code: .any(error))))
                 }
             }
         }
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(DownloadError(record: managedRecord, code: .cancelled)))
+            completionHandler(.failure(_DownloadError(record: managedRecord, code: .cancelled)))
         }
         
         return progress
@@ -283,7 +283,7 @@ public extension DriveService
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
         guard let managedRecord = record.managedRecord else {
-            completionHandler(.failure(AnyError(code: .nilManagedRecord)))
+            completionHandler(.failure(_AnyError(code: .nilManagedRecord)))
             
             return progress
         }
@@ -295,11 +295,11 @@ public extension DriveService
             {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
-                    completionHandler(.failure(DeleteError(record: managedRecord, code: .recordDoesNotExist)))
+                    completionHandler(.failure(_DeleteError(record: managedRecord, code: .recordDoesNotExist)))
                 }
                 else
                 {
-                    completionHandler(.failure(DeleteError(record: managedRecord, code: .any(error))))
+                    completionHandler(.failure(_DeleteError(record: managedRecord, code: .any(error))))
                 }
             }
             else
@@ -312,7 +312,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(DeleteError(record: managedRecord, code: .cancelled)))
+            completionHandler(.failure(_DeleteError(record: managedRecord, code: .cancelled)))
         }
         
         return progress
@@ -323,7 +323,7 @@ public extension DriveService
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
         guard let managedRecord = record.managedRecord else {
-            completionHandler(.failure(AnyError(code: .nilManagedRecord)))
+            completionHandler(.failure(_AnyError(code: .nilManagedRecord)))
             
             return progress
         }
@@ -338,7 +338,7 @@ public extension DriveService
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
             if let error = error
             {
-                completionHandler(.failure(UploadError(record: managedRecord, code: .any(error))))
+                completionHandler(.failure(_UploadError(record: managedRecord, code: .any(error))))
             }
             else
             {
@@ -350,7 +350,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(UploadError(record: managedRecord, code: .cancelled)))
+            completionHandler(.failure(_UploadError(record: managedRecord, code: .cancelled)))
         }
         
         return progress

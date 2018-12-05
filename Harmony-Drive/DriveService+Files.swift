@@ -28,11 +28,11 @@ public extension DriveService
 
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
             guard error == nil else {
-                return completionHandler(.failure(UploadFileError(file: file, code: .any(error!))))
+                return completionHandler(.failure(_UploadFileError(file: file, code: .any(error!))))
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                return completionHandler(.failure(UploadFileError(file: file, code: .invalidResponse)))
+                return completionHandler(.failure(_UploadFileError(file: file, code: .invalidResponse)))
             }
             
             let driveFile = GTLRDrive_File()
@@ -64,11 +64,11 @@ public extension DriveService
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
                 context.perform {
                     guard error == nil else {
-                        return completionHandler(.failure(UploadFileError(file: file, code: .any(error!))))
+                        return completionHandler(.failure(_UploadFileError(file: file, code: .any(error!))))
                     }
                     
                     guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile, context: context) else {
-                        return completionHandler(.failure(UploadFileError(file: file, code: .invalidResponse)))
+                        return completionHandler(.failure(_UploadFileError(file: file, code: .invalidResponse)))
                     }
                     
                     completionHandler(.success(remoteFile))
@@ -77,13 +77,13 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(UploadFileError(file: file, code: .cancelled)))
+                completionHandler(.failure(_UploadFileError(file: file, code: .cancelled)))
             }
         }
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(UploadFileError(file: file, code: .cancelled)))
+            completionHandler(.failure(_UploadFileError(file: file, code: .cancelled)))
         }
         
         return progress
@@ -111,16 +111,16 @@ public extension DriveService
             guard error == nil else {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
-                    return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .fileDoesNotExist)))
+                    return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .fileDoesNotExist)))
                 }
                 else
                 {
-                    return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .any(error!))))
+                    return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .any(error!))))
                 }
             }
             
             guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                return completionHandler(.failure(DownloadFileError(file: remoteFile, code: .invalidResponse)))
+                return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .invalidResponse)))
             }
             
             let file = File(identifier: fileIdentifier, fileURL: fileURL)
@@ -129,7 +129,7 @@ public extension DriveService
 
         progress.cancellationHandler = {
             fetcher.stopFetching()
-            completionHandler(.failure(DownloadFileError(file: remoteFile, code: .cancelled)))
+            completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .cancelled)))
         }
         
         return progress
@@ -146,11 +146,11 @@ public extension DriveService
             {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
-                    completionHandler(.failure(DeleteFileError(file: remoteFile, code: .fileDoesNotExist)))
+                    completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .fileDoesNotExist)))
                 }
                 else
                 {
-                    completionHandler(.failure(DeleteFileError(file: remoteFile, code: .any(error))))
+                    completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .any(error))))
                 }
             }
             else
@@ -163,7 +163,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(DeleteFileError(file: remoteFile, code: .cancelled)))
+            completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .cancelled)))
         }
         
         return progress
