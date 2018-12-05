@@ -20,7 +20,7 @@ public extension DriveService
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
-        let filename = record.recordedObjectType + "-" + record.recordedObjectIdentifier + "-" + file.identifier
+        let filename = String(describing: record.recordID) + "-" + file.identifier
         
         let fetchQuery = GTLRDriveQuery_FilesList.query()
         fetchQuery.q = "name = '\(filename)'"

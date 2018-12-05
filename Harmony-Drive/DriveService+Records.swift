@@ -176,7 +176,7 @@ public extension DriveService
             let data = try JSONEncoder().encode(record)
             
             let file = GTLRDrive_File()
-            file.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
+            file.name = String(describing: record.recordID)
             file.mimeType = "application/json"
             file.appProperties = GTLRDrive_File_AppProperties(json: metadata)
             
@@ -329,7 +329,7 @@ public extension DriveService
         }
         
         let driveFile = GTLRDrive_File()
-        driveFile.name = record.recordedObjectType + "-" + record.recordedObjectIdentifier
+        driveFile.name = String(describing: record.recordID)
         driveFile.mimeType = "application/json"
         driveFile.appProperties = GTLRDrive_File_AppProperties(json: metadata)
         
