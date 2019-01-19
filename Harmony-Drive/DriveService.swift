@@ -31,7 +31,7 @@ public class DriveService: NSObject, Service
 
     let service = GTLRDriveService()
 
-    private var authorizationCompletionHandlers = [(Result<Void, AuthenticationError>) -> Void]()
+    private var authorizationCompletionHandlers = [(Result<Account, AuthenticationError>) -> Void]()
     private var deauthorizationCompletionHandlers = [(Result<Void, AuthenticationError>) -> Void]()
     
     private weak var presentingViewController: UIViewController?
@@ -53,7 +53,7 @@ public class DriveService: NSObject, Service
 
 public extension DriveService
 {
-    func authenticate(withPresentingViewController viewController: UIViewController, completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
+    func authenticate(withPresentingViewController viewController: UIViewController, completionHandler: @escaping (Result<Account, AuthenticationError>) -> Void)
     {
         self.authorizationCompletionHandlers.append(completionHandler)
 
@@ -63,7 +63,7 @@ public extension DriveService
         GIDSignIn.sharedInstance().signIn()
     }
 
-    func authenticateInBackground(completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
+    func authenticateInBackground(completionHandler: @escaping (Result<Account, AuthenticationError>) -> Void)
     {
         self.authorizationCompletionHandlers.append(completionHandler)
 
@@ -89,13 +89,14 @@ extension DriveService: GIDSignInDelegate
 {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!)
     {
-        let result: Result<Void, AuthenticationError>
+        let result: Result<Account, AuthenticationError>
 
         if let user = user
         {
             self.service.authorizer = user.authentication.fetcherAuthorizer()
 
-            result = .success
+            let account = Account(name: user.profile.email)
+            result = .success(account)
         }
         else
         {
@@ -116,7 +117,7 @@ extension DriveService: GIDSignInDelegate
                 result = .failure(AuthenticationError(error))
             }
         }
-
+        
         self.authorizationCompletionHandlers.forEach { $0(result) }
         self.authorizationCompletionHandlers = []
     }
