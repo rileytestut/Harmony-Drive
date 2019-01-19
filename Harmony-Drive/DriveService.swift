@@ -31,8 +31,8 @@ public class DriveService: NSObject, Service
 
     let service = GTLRDriveService()
 
-    private var authorizationCompletionHandlers = [(Result<Void>) -> Void]()
-    private var deauthorizationCompletionHandlers = [(Result<Void>) -> Void]()
+    private var authorizationCompletionHandlers = [(Result<Void, AuthenticationError>) -> Void]()
+    private var deauthorizationCompletionHandlers = [(Result<Void, AuthenticationError>) -> Void]()
     
     private weak var presentingViewController: UIViewController?
 
@@ -53,7 +53,7 @@ public class DriveService: NSObject, Service
 
 public extension DriveService
 {
-    func authenticate(withPresentingViewController viewController: UIViewController, completionHandler: @escaping (Result<Void>) -> Void)
+    func authenticate(withPresentingViewController viewController: UIViewController, completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
     {
         self.authorizationCompletionHandlers.append(completionHandler)
 
@@ -63,7 +63,7 @@ public extension DriveService
         GIDSignIn.sharedInstance().signIn()
     }
 
-    func authenticateInBackground(completionHandler: @escaping (Result<Void>) -> Void)
+    func authenticateInBackground(completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
     {
         self.authorizationCompletionHandlers.append(completionHandler)
 
@@ -75,7 +75,7 @@ public extension DriveService
         }
     }
     
-    func deauthenticate(completionHandler: @escaping (Result<Void>) -> Void)
+    func deauthenticate(completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
     {
         self.deauthorizationCompletionHandlers.append(completionHandler)
         
@@ -89,7 +89,7 @@ extension DriveService: GIDSignInDelegate
 {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!)
     {
-        let result: Result<Void>
+        let result: Result<Void, AuthenticationError>
 
         if let user = user
         {
@@ -105,15 +105,15 @@ extension DriveService: GIDSignInDelegate
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.canceled.rawValue
             {
-                result = .failure(_AuthenticationError(code: .cancelled))
+                result = .failure(.other(.cancelled))
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue
             {
-                result = .failure(_AuthenticationError(code: .noSavedCredentials))
+                result = .failure(.noSavedCredentials)
             }
             catch
             {
-                result = .failure(_AuthenticationError(code: .any(error)))
+                result = .failure(AuthenticationError(error))
             }
         }
 
@@ -123,11 +123,11 @@ extension DriveService: GIDSignInDelegate
     
     public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!)
     {
-        let result: Result<Void>
+        let result: Result<Void, AuthenticationError>
         
         if let error = error
         {
-            result = .failure(_AuthenticationError(code: .any(error)))
+            result = .failure(AuthenticationError(error))
         }
         else
         {

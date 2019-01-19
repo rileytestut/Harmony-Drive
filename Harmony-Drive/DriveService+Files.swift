@@ -16,7 +16,7 @@ import GoogleDrive
 
 public extension DriveService
 {
-    public func upload(_ file: File, for record: LocalRecord, metadata: [HarmonyMetadataKey: Any], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteFile>) -> Void) -> Progress
+    public func upload(_ file: File, for record: AnyRecord, metadata: [HarmonyMetadataKey: Any], context: NSManagedObjectContext, completionHandler: @escaping (Result<RemoteFile, FileError>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
@@ -28,11 +28,11 @@ public extension DriveService
 
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
             guard error == nil else {
-                return completionHandler(.failure(_UploadFileError(file: file, code: .any(error!))))
+                return completionHandler(.failure(FileError(file.identifier, NetworkError.connectionFailed(error!))))
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                return completionHandler(.failure(_UploadFileError(file: file, code: .invalidResponse)))
+                return completionHandler(.failure(FileError(file.identifier, NetworkError.invalidResponse)))
             }
             
             let driveFile = GTLRDrive_File()
@@ -64,11 +64,11 @@ public extension DriveService
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
                 context.perform {
                     guard error == nil else {
-                        return completionHandler(.failure(_UploadFileError(file: file, code: .any(error!))))
+                        return completionHandler(.failure(FileError(file.identifier, NetworkError.connectionFailed(error!))))
                     }
                     
                     guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile, context: context) else {
-                        return completionHandler(.failure(_UploadFileError(file: file, code: .invalidResponse)))
+                        return completionHandler(.failure(FileError(file.identifier, NetworkError.invalidResponse)))
                     }
                     
                     completionHandler(.success(remoteFile))
@@ -77,19 +77,19 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(_UploadFileError(file: file, code: .cancelled)))
+                completionHandler(.failure(.other(file.identifier, .cancelled)))
             }
         }
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(_UploadFileError(file: file, code: .cancelled)))
+            completionHandler(.failure(.other(file.identifier, .cancelled)))
         }
         
         return progress
     }
     
-    public func download(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<File>) -> Void) -> Progress
+    public func download(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<File, FileError>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         progress.totalUnitCount = Int64(remoteFile.size)
@@ -111,16 +111,16 @@ public extension DriveService
             guard error == nil else {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
-                    return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .fileDoesNotExist)))
+                    return completionHandler(.failure(.doesNotExist(fileIdentifier)))
                 }
                 else
                 {
-                    return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .any(error!))))
+                    return completionHandler(.failure(FileError(fileIdentifier, NetworkError.connectionFailed(error!))))
                 }
             }
             
             guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                return completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .invalidResponse)))
+                return completionHandler(.failure(FileError(fileIdentifier, NetworkError.invalidResponse)))
             }
             
             let file = File(identifier: fileIdentifier, fileURL: fileURL)
@@ -129,28 +129,30 @@ public extension DriveService
 
         progress.cancellationHandler = {
             fetcher.stopFetching()
-            completionHandler(.failure(_DownloadFileError(file: remoteFile, code: .cancelled)))
+            completionHandler(.failure(.other(fileIdentifier, .cancelled)))
         }
         
         return progress
     }
     
-    public func delete(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<Void>) -> Void) -> Progress
+    public func delete(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<Void, FileError>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         
-        let query = GTLRDriveQuery_FilesDelete.query(withFileId: remoteFile.remoteIdentifier)
+        let fileIdentifier = remoteFile.identifier
+        
+        let query = GTLRDriveQuery_FilesDelete.query(withFileId: fileIdentifier)
         
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
             if let error = error
             {
                 if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
                 {
-                    completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .fileDoesNotExist)))
+                    return completionHandler(.failure(.doesNotExist(fileIdentifier)))
                 }
                 else
                 {
-                    completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .any(error))))
+                    return completionHandler(.failure(FileError(fileIdentifier, NetworkError.connectionFailed(error))))
                 }
             }
             else
@@ -163,7 +165,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(_DeleteFileError(file: remoteFile, code: .cancelled)))
+            completionHandler(.failure(.other(fileIdentifier, .cancelled)))
         }
         
         return progress
