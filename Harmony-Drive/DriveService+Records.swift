@@ -24,6 +24,7 @@ public extension DriveService
         
         let filesQuery = GTLRDriveQuery_FilesList.query()
         filesQuery.pageSize = 1000
+        filesQuery.spaces = appDataFolder
         filesQuery.fields = "nextPageToken, files(\(fileQueryFields))"
         filesQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
@@ -115,6 +116,7 @@ public extension DriveService
         query.fields = "nextPageToken, newStartPageToken, changes(fileId, type, removed, file(\(fileQueryFields)))"
         query.includeRemoved = true
         query.pageSize = 1000
+        query.spaces = appDataFolder
         
         let ticket = self.service.executeQuery(query) { (ticket, object, error) in
             guard error == nil else { return completionHandler(.failure(FetchError(NetworkError.connectionFailed(error!)))) }
@@ -189,6 +191,8 @@ public extension DriveService
                 }
                 else
                 {
+                    file.parents = [appDataFolder]
+                    
                     query = GTLRDriveQuery_FilesCreate.query(withObject: file, uploadParameters: uploadParameters)
                 }
                 

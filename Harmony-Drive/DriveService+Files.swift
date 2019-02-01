@@ -25,6 +25,7 @@ public extension DriveService
         let fetchQuery = GTLRDriveQuery_FilesList.query()
         fetchQuery.q = "name = '\(filename)'"
         fetchQuery.fields = "nextPageToken, files(\(fileQueryFields))"
+        fetchQuery.spaces = appDataFolder
 
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
             guard error == nil else {
@@ -50,6 +51,8 @@ public extension DriveService
             }
             else
             {
+                driveFile.parents = [appDataFolder]
+                
                 uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)                
             }
             

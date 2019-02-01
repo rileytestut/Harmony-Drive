@@ -15,6 +15,7 @@ import GoogleSignIn
 import GoogleDrive
 
 let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties, size"
+let appDataFolder = "appDataFolder"
 
 public class DriveService: NSObject, Service
 {
