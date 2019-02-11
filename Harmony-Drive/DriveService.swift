@@ -107,7 +107,7 @@ extension DriveService: GIDSignInDelegate
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.canceled.rawValue
             {
-                result = .failure(.other(.cancelled))
+                result = .failure(.other(GeneralError.cancelled))
             }
             catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue
             {
