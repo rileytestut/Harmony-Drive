@@ -47,7 +47,7 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(.other(record, .cancelled)))
+                completionHandler(.failure(.other(record, GeneralError.cancelled)))
             }
         }
 

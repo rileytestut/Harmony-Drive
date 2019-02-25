@@ -70,7 +70,7 @@ public extension DriveService
         let batchQuery = GTLRBatchQuery(queries: [filesQuery, changeTokenQuery])
 
         let ticket = self.service.executeQuery(batchQuery) { (ticket, object, error) in
-            guard let filesResult = filesResult, let tokenResult = tokenResult else { return completionHandler(.failure(FetchError.other(.unknown))) }
+            guard let filesResult = filesResult, let tokenResult = tokenResult else { return completionHandler(.failure(FetchError.other(GeneralError.unknown))) }
             
             let result: Result<(Set<RemoteRecord>, Data), FetchError>
             
@@ -97,7 +97,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(FetchError.other(.cancelled)))
+            completionHandler(.failure(FetchError.other(GeneralError.cancelled)))
         }
         
         return progress
@@ -155,7 +155,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(FetchError.other(.cancelled)))
+            completionHandler(.failure(FetchError.other(GeneralError.cancelled)))
         }
         
         return progress
@@ -216,7 +216,7 @@ public extension DriveService
                 
                 progress.cancellationHandler = {
                     ticket.cancel()
-                    completionHandler(.failure(.other(record, .cancelled)))
+                    completionHandler(.failure(.other(record, GeneralError.cancelled)))
                 }
             }
             catch
@@ -273,7 +273,7 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(.other(record, .cancelled)))
+                completionHandler(.failure(.other(record, GeneralError.cancelled)))
             }
         }
         
@@ -311,7 +311,7 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(.other(record, .cancelled)))
+                completionHandler(.failure(.other(record, GeneralError.cancelled)))
             }
         }
         
@@ -354,7 +354,7 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(.other(record, .cancelled)))
+                completionHandler(.failure(.other(record, GeneralError.cancelled)))
             }
         }
         

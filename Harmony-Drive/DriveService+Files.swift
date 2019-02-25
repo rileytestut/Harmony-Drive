@@ -80,13 +80,13 @@ public extension DriveService
             
             progress.cancellationHandler = {
                 ticket.cancel()
-                completionHandler(.failure(.other(file.identifier, .cancelled)))
+                completionHandler(.failure(.other(file.identifier, GeneralError.cancelled)))
             }
         }
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(.other(file.identifier, .cancelled)))
+            completionHandler(.failure(.other(file.identifier, GeneralError.cancelled)))
         }
         
         return progress
@@ -132,7 +132,7 @@ public extension DriveService
 
         progress.cancellationHandler = {
             fetcher.stopFetching()
-            completionHandler(.failure(.other(fileIdentifier, .cancelled)))
+            completionHandler(.failure(.other(fileIdentifier, GeneralError.cancelled)))
         }
         
         return progress
@@ -168,7 +168,7 @@ public extension DriveService
         
         progress.cancellationHandler = {
             ticket.cancel()
-            completionHandler(.failure(.other(fileIdentifier, .cancelled)))
+            completionHandler(.failure(.other(fileIdentifier, GeneralError.cancelled)))
         }
         
         return progress
