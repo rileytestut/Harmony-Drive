@@ -28,12 +28,12 @@ public extension DriveService
         filesQuery.fields = "nextPageToken, files(\(fileQueryFields))"
         filesQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
-                filesResult = .failure(FetchError(NetworkError.connectionFailed(error!)))
+                filesResult = .failure(FetchError(ServiceError.other(error!)))
                 return
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                filesResult = .failure(FetchError(NetworkError.invalidResponse))
+                filesResult = .failure(FetchError(ServiceError.invalidResponse))
                 return
             }
             
@@ -48,17 +48,17 @@ public extension DriveService
         let changeTokenQuery = GTLRDriveQuery_ChangesGetStartPageToken.query()
         changeTokenQuery.completionBlock = { (ticket, object, error) in
             guard error == nil else {
-                tokenResult = .failure(FetchError(NetworkError.connectionFailed(error!)))
+                tokenResult = .failure(FetchError(ServiceError.other(error!)))
                 return
             }
 
             guard let result = object as? GTLRDrive_StartPageToken, let token = result.startPageToken else {
-                tokenResult = .failure(FetchError(NetworkError.invalidResponse))
+                tokenResult = .failure(FetchError(ServiceError.invalidResponse))
                 return
             }
 
             guard let data = token.data(using: .utf8) else {
-                tokenResult = .failure(FetchError(NetworkError.invalidResponse))
+                tokenResult = .failure(FetchError(ServiceError.invalidResponse))
                 return
             }
 
@@ -77,9 +77,9 @@ public extension DriveService
             switch (filesResult, tokenResult)
             {
             case (.success(let records), .success(let token)): result = .success((records, token))
-            case (.success, .failure(let error)): result = .failure(FetchError(NetworkError.connectionFailed(error)))
-            case (.failure(let error), .success): result = .failure(FetchError(NetworkError.connectionFailed(error)))
-            case (.failure(let error), .failure): result = .failure(FetchError(NetworkError.connectionFailed(error)))
+            case (.success, .failure(let error)): result = .failure(FetchError(ServiceError.other(error)))
+            case (.failure(let error), .success): result = .failure(FetchError(ServiceError.other(error)))
+            case (.failure(let error), .failure): result = .failure(FetchError(ServiceError.other(error)))
             }
             
             // Delete inserted RemoteRecords if filesResult is success, but the overall result is failure
@@ -119,13 +119,13 @@ public extension DriveService
         query.spaces = appDataFolder
         
         let ticket = self.service.executeQuery(query) { (ticket, object, error) in
-            guard error == nil else { return completionHandler(.failure(FetchError(NetworkError.connectionFailed(error!)))) }
+            guard error == nil else { return completionHandler(.failure(FetchError(ServiceError.other(error!)))) }
             
             guard let result = object as? GTLRDrive_ChangeList,
                 let newPageToken = result.newStartPageToken,
                 let tokenData = newPageToken.data(using: .utf8),
                 let changes = result.changes
-            else { return completionHandler(.failure(FetchError(NetworkError.invalidResponse))) }
+            else { return completionHandler(.failure(FetchError(ServiceError.invalidResponse))) }
             
             context.perform {
                 
@@ -201,11 +201,11 @@ public extension DriveService
                 let ticket = self.service.executeQuery(query) { (ticket, file, error) in
                     context.perform {
                         guard error == nil else {
-                            return completionHandler(.failure(RecordError(record, NetworkError.connectionFailed(error!))))
+                            return completionHandler(.failure(RecordError(record, ServiceError.other(error!))))
                         }
                         
                         guard let file = file as? GTLRDrive_File, let remoteRecord = RemoteRecord(file: file, status: .normal, context: context) else {
-                            return completionHandler(.failure(RecordError(record, NetworkError.invalidResponse)))
+                            return completionHandler(.failure(RecordError(record, ServiceError.invalidResponse)))
                         }
                         
                         completionHandler(.success(remoteRecord))
@@ -246,12 +246,12 @@ public extension DriveService
                         }
                         else
                         {
-                            return completionHandler(.failure(RecordError(record, NetworkError.connectionFailed(error!))))
+                            return completionHandler(.failure(RecordError(record, ServiceError.other(error!))))
                         }
                     }
                     
                     guard let file = file as? GTLRDataObject else {
-                        return completionHandler(.failure(RecordError(record, NetworkError.invalidResponse)))
+                        return completionHandler(.failure(RecordError(record, ServiceError.invalidResponse)))
                     }
                     
                     do

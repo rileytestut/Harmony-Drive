@@ -33,12 +33,12 @@ public extension DriveService
                     }
                     else
                     {
-                        return completionHandler(.failure(RecordError(record, NetworkError.connectionFailed(error!))))
+                        return completionHandler(.failure(RecordError(record, ServiceError.other(error!))))
                     }
                 }
                 
                 guard let revisionList = object as? GTLRDrive_RevisionList, let revisions = revisionList.revisions else {
-                    return completionHandler(.failure(RecordError(record, NetworkError.invalidResponse)))
+                    return completionHandler(.failure(RecordError(record, ServiceError.invalidResponse)))
                 }
                 
                 let versions = revisions.lazy.compactMap(Version.init(revision:)).reversed()

@@ -29,11 +29,11 @@ public extension DriveService
 
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
             guard error == nil else {
-                return completionHandler(.failure(FileError(file.identifier, NetworkError.connectionFailed(error!))))
+                return completionHandler(.failure(FileError(file.identifier, ServiceError.other(error!))))
             }
             
             guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                return completionHandler(.failure(FileError(file.identifier, NetworkError.invalidResponse)))
+                return completionHandler(.failure(FileError(file.identifier, ServiceError.invalidResponse)))
             }
             
             let driveFile = GTLRDrive_File()
@@ -67,11 +67,11 @@ public extension DriveService
             let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
                 context.perform {
                     guard error == nil else {
-                        return completionHandler(.failure(FileError(file.identifier, NetworkError.connectionFailed(error!))))
+                        return completionHandler(.failure(FileError(file.identifier, ServiceError.other(error!))))
                     }
                     
                     guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile, context: context) else {
-                        return completionHandler(.failure(FileError(file.identifier, NetworkError.invalidResponse)))
+                        return completionHandler(.failure(FileError(file.identifier, ServiceError.invalidResponse)))
                     }
                     
                     completionHandler(.success(remoteFile))
@@ -118,12 +118,12 @@ public extension DriveService
                 }
                 else
                 {
-                    return completionHandler(.failure(FileError(fileIdentifier, NetworkError.connectionFailed(error!))))
+                    return completionHandler(.failure(FileError(fileIdentifier, ServiceError.other(error!))))
                 }
             }
             
             guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                return completionHandler(.failure(FileError(fileIdentifier, NetworkError.invalidResponse)))
+                return completionHandler(.failure(FileError(fileIdentifier, ServiceError.invalidResponse)))
             }
             
             let file = File(identifier: fileIdentifier, fileURL: fileURL)
@@ -155,7 +155,7 @@ public extension DriveService
                 }
                 else
                 {
-                    return completionHandler(.failure(FileError(fileIdentifier, NetworkError.connectionFailed(error))))
+                    return completionHandler(.failure(FileError(fileIdentifier, ServiceError.other(error))))
                 }
             }
             else
