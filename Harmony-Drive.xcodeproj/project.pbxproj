@@ -43,6 +43,7 @@
 		BF63A1B721A4BCC600EE8F61 /* DriveService+Versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A1B621A4BCC600EE8F61 /* DriveService+Versions.swift */; };
 		BF63A1B921A4BE4500EE8F61 /* Version+Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A1B821A4BE4500EE8F61 /* Version+Revision.swift */; };
 		BF6C058C201FBEDA00271895 /* Harmony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF6C058D201FBEDA00271895 /* Harmony.framework */; };
+		BF823E3B2231D2CF00ABAA2A /* Result+Drive.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF823E3A2231D2CF00ABAA2A /* Result+Drive.swift */; };
 		BFECFA032016982E0012B9FC /* Harmony_Drive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */; };
 		BFECFA082016982E0012B9FC /* Harmony_DriveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFECFA072016982E0012B9FC /* Harmony_DriveTests.swift */; };
 		BFECFADE20169EDC0012B9FC /* GTLRCommon_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = BFECFADD20169EDC0012B9FC /* GTLRCommon_Sources.m */; };
@@ -132,6 +133,7 @@
 		BF63A1B621A4BCC600EE8F61 /* DriveService+Versions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DriveService+Versions.swift"; sourceTree = "<group>"; };
 		BF63A1B821A4BE4500EE8F61 /* Version+Revision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Version+Revision.swift"; sourceTree = "<group>"; };
 		BF6C058D201FBEDA00271895 /* Harmony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Harmony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF823E3A2231D2CF00ABAA2A /* Result+Drive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Drive.swift"; sourceTree = "<group>"; };
 		BFECF9F92016982D0012B9FC /* Harmony_Drive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Harmony_Drive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFECF9FC2016982D0012B9FC /* Harmony_Drive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Harmony_Drive.h; sourceTree = "<group>"; };
 		BFECF9FD2016982D0012B9FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				BF0B5BCC202155E90074CFB9 /* RemoteRecord+File.swift */,
 				BF3915DE21811DB100AF74E5 /* RemoteFile+File.swift */,
 				BF63A1B821A4BE4500EE8F61 /* Version+Revision.swift */,
+				BF823E3A2231D2CF00ABAA2A /* Result+Drive.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF3915DF21811DB100AF74E5 /* RemoteFile+File.swift in Sources */,
+				BF823E3B2231D2CF00ABAA2A /* Result+Drive.swift in Sources */,
 				BF3915DD2181147000AF74E5 /* DriveService+Files.swift in Sources */,
 				BF0B5BCA20212D7C0074CFB9 /* DriveService+Records.swift in Sources */,
 				BF14BC91201EECA1007D5292 /* DriveService.swift in Sources */,

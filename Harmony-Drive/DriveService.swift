@@ -17,6 +17,8 @@ import GoogleDrive
 let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties, size"
 let appDataFolder = "appDataFolder"
 
+private let kGoogleHTTPErrorDomain = "com.google.HTTPStatus"
+
 public class DriveService: NSObject, Service
 {
     public static let shared = DriveService()
@@ -86,58 +88,101 @@ public extension DriveService
     }
 }
 
+extension DriveService
+{
+    func process<T>(_ result: Result<T, Error>) throws -> T
+    {
+        do
+        {
+            do
+            {
+                let value = try result.get()
+                return value
+            }
+            catch let error where error._domain == kGIDSignInErrorDomain
+            {
+                switch error._code
+                {
+                case GIDSignInErrorCode.canceled.rawValue: throw GeneralError.cancelled
+                case GIDSignInErrorCode.hasNoAuthInKeychain.rawValue: throw AuthenticationError.noSavedCredentials
+                default: throw ServiceError(error)
+                }
+            }
+            catch let error where error._domain == kGTLRErrorObjectDomain || error._domain == kGoogleHTTPErrorDomain
+            {
+                switch error._code
+                {
+                case 401: throw AuthenticationError.tokenExpired
+                case 403: throw ServiceError.rateLimitExceeded
+                case 404: throw ServiceError.itemDoesNotExist
+                default: throw ServiceError(error)
+                }
+            }
+            catch
+            {
+                throw ServiceError(error)
+            }
+        }
+        catch let error as HarmonyError
+        {
+            throw error
+        }
+        catch
+        {
+            assertionFailure("Non-HarmonyError thrown from DriveService.process(_:doesNotExistHandler:)")
+            throw error
+        }
+    }
+}
+
 extension DriveService: GIDSignInDelegate
 {
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!)
     {
         let result: Result<Account, AuthenticationError>
 
-        if let user = user
+        do
         {
+            let user = try self.process(Result(user, error))
+            
             self.service.authorizer = user.authentication.fetcherAuthorizer()
-
+            
             let account = Account(name: user.profile.email)
             result = .success(account)
         }
-        else
+        
+        catch
         {
-            do
-            {
-                throw error
-            }
-            catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.canceled.rawValue
-            {
-                result = .failure(.other(GeneralError.cancelled))
-            }
-            catch let error as NSError where error.domain == kGIDSignInErrorDomain && error.code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue
-            {
-                result = .failure(.noSavedCredentials)
-            }
-            catch
-            {
-                result = .failure(AuthenticationError(error))
-            }
+            result = .failure(AuthenticationError(error))
         }
         
-        self.authorizationCompletionHandlers.forEach { $0(result) }
-        self.authorizationCompletionHandlers = []
+        // Reset self.authorizationCompletionHandlers _before_ calling all the completion handlers.
+        // This stops us from accidentally calling completion handlers twice in some instances.
+        let completionHandlers = self.authorizationCompletionHandlers
+        self.authorizationCompletionHandlers.removeAll()
+        
+        completionHandlers.forEach { $0(result) }
     }
     
     public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!)
     {
         let result: Result<Void, AuthenticationError>
         
-        if let error = error
+        do
+        {
+            try self.process(Result(error))
+            
+            result = .success
+        }
+        catch
         {
             result = .failure(AuthenticationError(error))
         }
-        else
-        {
-            result = .success
-        }
         
-        self.deauthorizationCompletionHandlers.forEach { $0(result) }
-        self.deauthorizationCompletionHandlers = []
+        let completionHandlers = self.deauthorizationCompletionHandlers
+        self.deauthorizationCompletionHandlers.removeAll()
+        
+        completionHandlers.forEach { $0(result) }
     }
 }
 

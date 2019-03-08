@@ -26,61 +26,68 @@ public extension DriveService
         fetchQuery.q = "name = '\(filename)'"
         fetchQuery.fields = "nextPageToken, files(\(fileQueryFields))"
         fetchQuery.spaces = appDataFolder
-
+        
         let ticket = self.service.executeQuery(fetchQuery) { (ticket, object, error) in
-            guard error == nil else {
-                return completionHandler(.failure(FileError(file.identifier, ServiceError.other(error!))))
-            }
-            
-            guard let list = object as? GTLRDrive_FileList, let files = list.files else {
-                return completionHandler(.failure(FileError(file.identifier, ServiceError.invalidResponse)))
-            }
-            
-            let driveFile = GTLRDrive_File()
-            driveFile.name = filename
-            driveFile.mimeType = "application/octet-stream"
-            driveFile.appProperties = GTLRDrive_File_AppProperties(json: metadata)
-            
-            let uploadParameters = GTLRUploadParameters(fileURL: file.fileURL, mimeType: "application/octet-stream")
-            
-            let uploadQuery: GTLRDriveQuery
-            
-            if let file = files.first, let identifier = file.identifier
+            do
             {
-                uploadQuery = GTLRDriveQuery_FilesUpdate.query(withObject: driveFile, fileId: identifier, uploadParameters: uploadParameters)
-            }
-            else
-            {
-                driveFile.parents = [appDataFolder]
+                let files = try self.process(Result((object as? GTLRDrive_FileList)?.files, error))
                 
-                uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)                
-            }
-            
-            uploadQuery.fields = fileQueryFields
-            
-            let executionParameters = GTLRServiceExecutionParameters()
-            executionParameters.uploadProgressBlock = { (ticket, uploadedBytes, totalBytes) in
-                progress.totalUnitCount = Int64(totalBytes)
-                progress.completedUnitCount = Int64(uploadedBytes)
-            }
-            
-            let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
-                context.perform {
-                    guard error == nil else {
-                        return completionHandler(.failure(FileError(file.identifier, ServiceError.other(error!))))
-                    }
-                    
-                    guard let driveFile = driveFile as? GTLRDrive_File, let remoteFile = RemoteFile(file: driveFile, context: context) else {
-                        return completionHandler(.failure(FileError(file.identifier, ServiceError.invalidResponse)))
-                    }
-                    
-                    completionHandler(.success(remoteFile))
+                let driveFile = GTLRDrive_File()
+                driveFile.name = filename
+                driveFile.mimeType = "application/octet-stream"
+                driveFile.appProperties = GTLRDrive_File_AppProperties(json: metadata)
+                
+                let uploadParameters = GTLRUploadParameters(fileURL: file.fileURL, mimeType: "application/octet-stream")
+                
+                let uploadQuery: GTLRDriveQuery
+                
+                if let file = files.first, let identifier = file.identifier
+                {
+                    uploadQuery = GTLRDriveQuery_FilesUpdate.query(withObject: driveFile, fileId: identifier, uploadParameters: uploadParameters)
                 }
+                else
+                {
+                    driveFile.parents = [appDataFolder]
+                    
+                    uploadQuery = GTLRDriveQuery_FilesCreate.query(withObject: driveFile, uploadParameters: uploadParameters)
+                }
+                
+                uploadQuery.fields = fileQueryFields
+                
+                let executionParameters = GTLRServiceExecutionParameters()
+                executionParameters.uploadProgressBlock = { (ticket, uploadedBytes, totalBytes) in
+                    progress.totalUnitCount = Int64(totalBytes)
+                    progress.completedUnitCount = Int64(uploadedBytes)
+                }
+                
+                let ticket = self.service.executeQuery(uploadQuery) { (ticket, driveFile, error) in
+                    context.perform {
+                        do
+                        {
+                            let driveFile = try self.process(Result(driveFile as? GTLRDrive_File, error))
+                            
+                            guard let remoteFile = RemoteFile(file: driveFile, context: context) else {
+                                throw ServiceError.invalidResponse
+                            }
+                            
+                            completionHandler(.success(remoteFile))
+                        }
+                        catch
+                        {
+                            completionHandler(.failure(FileError(file.identifier, error)))
+                        }
+                    }
+                }
+                
+                progress.cancellationHandler = {
+                    ticket.cancel()
+                    completionHandler(.failure(.other(file.identifier, GeneralError.cancelled)))
+                }
+                
             }
-            
-            progress.cancellationHandler = {
-                ticket.cancel()
-                completionHandler(.failure(.other(file.identifier, GeneralError.cancelled)))
+            catch
+            {
+                completionHandler(.failure(FileError(file.identifier, error)))
             }
         }
         
@@ -111,25 +118,21 @@ public extension DriveService
             progress.completedUnitCount = totalBytesWritten
         }
         fetcher.beginFetch { (_, error) in
-            guard error == nil else {
-                if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
-                {
-                    return completionHandler(.failure(.doesNotExist(fileIdentifier)))
-                }
-                else
-                {
-                    return completionHandler(.failure(FileError(fileIdentifier, ServiceError.other(error!))))
-                }
+            do
+            {
+                try self.process(Result(error))
+                
+                guard FileManager.default.fileExists(atPath: fileURL.path) else { throw ServiceError.invalidResponse }
+                
+                let file = File(identifier: fileIdentifier, fileURL: fileURL)
+                completionHandler(.success(file))
             }
-            
-            guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                return completionHandler(.failure(FileError(fileIdentifier, ServiceError.invalidResponse)))
+            catch
+            {
+                completionHandler(.failure(FileError(fileIdentifier, error)))
             }
-            
-            let file = File(identifier: fileIdentifier, fileURL: fileURL)
-            completionHandler(.success(file))
         }
-
+        
         progress.cancellationHandler = {
             fetcher.stopFetching()
             completionHandler(.failure(.other(fileIdentifier, GeneralError.cancelled)))
@@ -147,20 +150,15 @@ public extension DriveService
         let query = GTLRDriveQuery_FilesDelete.query(withFileId: fileIdentifier)
         
         let ticket = self.service.executeQuery(query) { (ticket, file, error) in
-            if let error = error
+            do
             {
-                if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
-                {
-                    return completionHandler(.failure(.doesNotExist(fileIdentifier)))
-                }
-                else
-                {
-                    return completionHandler(.failure(FileError(fileIdentifier, ServiceError.other(error))))
-                }
-            }
-            else
-            {
+                try self.process(Result(error))
+                
                 completionHandler(.success)
+            }
+            catch
+            {
+                completionHandler(.failure(FileError(fileIdentifier, error)))
             }
             
             progress.completedUnitCount = 1

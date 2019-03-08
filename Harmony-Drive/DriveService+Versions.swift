@@ -26,23 +26,19 @@ public extension DriveService
             let query = GTLRDriveQuery_RevisionsList.query(withFileId: remoteRecord.identifier)
             
             let ticket = self.service.executeQuery(query) { (ticket, object, error) in
-                guard error == nil else {
-                    if let error = error as NSError?, error.domain == kGTLRErrorObjectDomain && error.code == 404
-                    {
-                        return completionHandler(.failure(.doesNotExist(record)))
-                    }
-                    else
-                    {
-                        return completionHandler(.failure(RecordError(record, ServiceError.other(error!))))
-                    }
+                do
+                {
+                    let revisions = try self.process(Result((object as? GTLRDrive_RevisionList)?.revisions, error))
+                    
+                    let versions = revisions.lazy.compactMap(Version.init(revision:)).reversed()
+                    completionHandler(.success(Array(versions)))
+                }
+                catch
+                {
+                    completionHandler(.failure(RecordError(record, error)))
                 }
                 
-                guard let revisionList = object as? GTLRDrive_RevisionList, let revisions = revisionList.revisions else {
-                    return completionHandler(.failure(RecordError(record, ServiceError.invalidResponse)))
-                }
-                
-                let versions = revisions.lazy.compactMap(Version.init(revision:)).reversed()
-                completionHandler(.success(Array(versions)))
+                progress.completedUnitCount += 1
             }
             
             progress.cancellationHandler = {
@@ -50,7 +46,7 @@ public extension DriveService
                 completionHandler(.failure(.other(record, GeneralError.cancelled)))
             }
         }
-
+        
         return progress
     }
 }
