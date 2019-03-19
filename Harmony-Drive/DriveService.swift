@@ -35,7 +35,7 @@ public class DriveService: NSObject, Service
     let service = GTLRDriveService()
 
     private var authorizationCompletionHandlers = [(Result<Account, AuthenticationError>) -> Void]()
-    private var deauthorizationCompletionHandlers = [(Result<Void, AuthenticationError>) -> Void]()
+    private var deauthorizationCompletionHandlers = [(Result<Void, DeauthenticationError>) -> Void]()
     
     private weak var presentingViewController: UIViewController?
 
@@ -78,7 +78,7 @@ public extension DriveService
         }
     }
     
-    func deauthenticate(completionHandler: @escaping (Result<Void, AuthenticationError>) -> Void)
+    func deauthenticate(completionHandler: @escaping (Result<Void, DeauthenticationError>) -> Void)
     {
         self.deauthorizationCompletionHandlers.append(completionHandler)
         
@@ -129,7 +129,7 @@ extension DriveService
         }
         catch
         {
-            assertionFailure("Non-HarmonyError thrown from DriveService.process(_:doesNotExistHandler:)")
+            assertionFailure("Non-HarmonyError thrown from DriveService.process(_:)")
             throw error
         }
     }
@@ -166,7 +166,7 @@ extension DriveService: GIDSignInDelegate
     
     public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!)
     {
-        let result: Result<Void, AuthenticationError>
+        let result: Result<Void, DeauthenticationError>
         
         do
         {
@@ -176,7 +176,7 @@ extension DriveService: GIDSignInDelegate
         }
         catch
         {
-            result = .failure(AuthenticationError(error))
+            result = .failure(DeauthenticationError(error))
         }
         
         let completionHandlers = self.deauthorizationCompletionHandlers
