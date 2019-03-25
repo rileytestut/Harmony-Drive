@@ -33,9 +33,8 @@ public class DriveService: NSObject, Service
     }
 
     let service = GTLRDriveService()
-
+    
     private var authorizationCompletionHandlers = [(Result<Account, AuthenticationError>) -> Void]()
-    private var deauthorizationCompletionHandlers = [(Result<Void, DeauthenticationError>) -> Void]()
     
     private weak var presentingViewController: UIViewController?
 
@@ -80,11 +79,8 @@ public extension DriveService
     
     func deauthenticate(completionHandler: @escaping (Result<Void, DeauthenticationError>) -> Void)
     {
-        self.deauthorizationCompletionHandlers.append(completionHandler)
-        
-        GIDSignIn.sharedInstance().delegate = self
-        
-        GIDSignIn.sharedInstance().disconnect()
+        GIDSignIn.sharedInstance().signOut()
+        completionHandler(.success)
     }
 }
 
@@ -112,7 +108,7 @@ extension DriveService
             {
                 switch error._code
                 {
-                case 401: throw AuthenticationError.tokenExpired
+                case 400, 401: throw AuthenticationError.tokenExpired
                 case 403: throw ServiceError.rateLimitExceeded
                 case 404: throw ServiceError.itemDoesNotExist
                 default: throw ServiceError(error)
@@ -150,7 +146,6 @@ extension DriveService: GIDSignInDelegate
             let account = Account(name: user.profile.email)
             result = .success(account)
         }
-        
         catch
         {
             result = .failure(AuthenticationError(error))
@@ -160,27 +155,6 @@ extension DriveService: GIDSignInDelegate
         // This stops us from accidentally calling completion handlers twice in some instances.
         let completionHandlers = self.authorizationCompletionHandlers
         self.authorizationCompletionHandlers.removeAll()
-        
-        completionHandlers.forEach { $0(result) }
-    }
-    
-    public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!)
-    {
-        let result: Result<Void, DeauthenticationError>
-        
-        do
-        {
-            try self.process(Result(error))
-            
-            result = .success
-        }
-        catch
-        {
-            result = .failure(DeauthenticationError(error))
-        }
-        
-        let completionHandlers = self.deauthorizationCompletionHandlers
-        self.deauthorizationCompletionHandlers.removeAll()
         
         completionHandlers.forEach { $0(result) }
     }
