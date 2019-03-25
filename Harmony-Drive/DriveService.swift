@@ -143,7 +143,7 @@ extension DriveService: GIDSignInDelegate
             
             self.service.authorizer = user.authentication.fetcherAuthorizer()
             
-            let account = Account(name: user.profile.email)
+            let account = Account(name: user.profile.name, emailAddress: user.profile.email)
             result = .success(account)
         }
         catch
