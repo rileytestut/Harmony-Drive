@@ -82,6 +82,15 @@ public extension DriveService
         GIDSignIn.sharedInstance().signOut()
         completionHandler(.success)
     }
+    
+    func authenticateManually(withAccessToken accessToken: String, completionHandler: @escaping (Result<Account, AuthenticationError>) -> Void) {
+        // need to do
+    }
+    
+    func getAccessToken() -> String? {
+        // need to do
+        return nil
+    }
 }
 
 extension DriveService
