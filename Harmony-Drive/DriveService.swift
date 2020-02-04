@@ -11,8 +11,9 @@ import CoreData
 
 import Harmony
 
+import GTMSessionFetcher
 import GoogleSignIn
-import GoogleDrive
+import GoogleAPIClientForREST
 
 let fileQueryFields = "id, mimeType, name, headRevisionId, modifiedTime, appProperties, size"
 let appDataFolder = "appDataFolder"

@@ -12,7 +12,7 @@ import CoreData
 import Harmony
 import Roxas
 
-import GoogleDrive
+import GoogleAPIClientForREST
 
 public extension DriveService
 {

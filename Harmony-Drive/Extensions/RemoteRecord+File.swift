@@ -11,7 +11,7 @@ import CoreData
 
 import Harmony
 
-import GoogleDrive
+import GoogleAPIClientForREST
 
 extension RemoteRecord
 {
