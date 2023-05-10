@@ -60,7 +60,7 @@ public extension DriveService
     {
         self.authorizationCompletionHandlers.append(completionHandler)
 
-        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().presentingViewController = viewController
         GIDSignIn.sharedInstance().delegate = self
 
         GIDSignIn.sharedInstance().signIn()
@@ -74,7 +74,7 @@ public extension DriveService
 
         // Must run on main thread.
         DispatchQueue.main.async {
-            GIDSignIn.sharedInstance().signInSilently()
+            GIDSignIn.sharedInstance().restorePreviousSignIn()
         }
     }
     
@@ -160,17 +160,3 @@ extension DriveService: GIDSignInDelegate
         completionHandlers.forEach { $0(result) }
     }
 }
-
-extension DriveService: GIDSignInUIDelegate
-{
-    public func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!)
-    {
-        self.presentingViewController?.present(viewController, animated: true, completion: nil)
-    }
-
-    public func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!)
-    {
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
-    }
-}
-
