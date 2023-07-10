@@ -188,6 +188,7 @@ public extension DriveService
                 file.name = String(describing: record.recordID)
                 file.mimeType = "application/json"
                 file.appProperties = GTLRDrive_File_AppProperties(json: metadata)
+                file.modifiedTime = GTLRDateTime(date: localRecord.modificationDate)
                 
                 let uploadParameters = GTLRUploadParameters(data: data, mimeType: "application/json")
                 uploadParameters.shouldUploadWithSingleRequest = true
@@ -201,6 +202,7 @@ public extension DriveService
                 else
                 {
                     file.parents = [appDataFolder]
+                    file.createdTime = GTLRDateTime(date: localRecord.modificationDate)
                     
                     query = GTLRDriveQuery_FilesCreate.query(withObject: file, uploadParameters: uploadParameters)
                 }
