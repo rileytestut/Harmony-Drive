@@ -107,7 +107,7 @@ public extension DriveService
         return progress
     }
     
-    func download(_ remoteFile: RemoteFile, completionHandler: @escaping (Result<File, FileError>) -> Void) -> Progress
+    func download(_ remoteFile: RemoteFile, version: String?, completionHandler: @escaping (Result<File, FileError>) -> Void) -> Progress
     {
         let progress = Progress.discreteProgress(totalUnitCount: 1)
         progress.totalUnitCount = Int64(remoteFile.size)
@@ -115,7 +115,16 @@ public extension DriveService
         
         let fileIdentifier = remoteFile.identifier
         
-        let query = GTLRDriveQuery_RevisionsGet.queryForMedia(withFileId: remoteFile.remoteIdentifier, revisionId: remoteFile.versionIdentifier)
+        let query: GTLRDriveQuery
+        if let version
+        {
+            query = GTLRDriveQuery_RevisionsGet.queryForMedia(withFileId: remoteFile.remoteIdentifier, revisionId: version)
+        }
+        else
+        {
+            query = GTLRDriveQuery_FilesGet.queryForMedia(withFileId: remoteFile.remoteIdentifier)
+        }
+        
         let downloadRequest = self.service.request(for: query) as URLRequest
         
         let fileURL = FileManager.default.uniqueTemporaryURL()
